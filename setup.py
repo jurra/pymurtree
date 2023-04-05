@@ -3,8 +3,6 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 from setuptools import setup
 from setuptools.command.install import install
 
-from git import Repo
-
 __version__ = "0.0.1"
 
 # The main interface is through Pybind11Extension.
@@ -38,10 +36,7 @@ setup(
     # level" feature, but in the future it may provide more features.
     cmdclass={
               "build_ext": build_ext, 
-              "install": Repo.clone_from("https://github.com/MurTree/murtree.git", "murtree")
             },
     zip_safe=False,
     python_requires=">=3.7",
-    # Download
-    download_url='https://bitbucket.org/yiquintero/murtree/get/cf0d8f86691c8f9a61cefee0ac2a2bc0120a405d.tar.gz'
 )
