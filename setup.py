@@ -1,42 +1,41 @@
 # Available at setup time due to pyproject.toml
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 from setuptools import setup
-from setuptools.command.install import install
+from setuptools.command.build import build
+from git import Repo
+import os.path
+from glob import glob
 
-__version__ = "0.0.1"
+__version__ = "0.0.1"   # Verion of PyMurTree
 
-# The main interface is through Pybind11Extension.
-# * You can add cxx_std=11/14/17, and then build_ext can be removed.
-# * You can set include_pybind11=false to add the include directory yourself,
-#   say from a submodule.
-#
-# Note:
-#   Sort input source files if you glob sources to ensure bit-for-bit
-#   reproducible builds (https://github.com/pybind/python_example/pull/53)
+# Clone the Murtree repository and checkout last commit before DCC changes
+if not os.path.exists("murtree"):
+    repo_url = "https://github.com/MurTree/murtree.git"
+    Repo.clone_from(repo_url, "murtree")
+    repo = Repo("murtree")
+    commit = repo.commit("8f98216533eb946e7c472336dce945f335c54fec")
+    repo.git.checkout(commit)
+
 
 ext_modules = [
-    Pybind11Extension("python_example",
-        ["src/main.cpp"],
-        # Example: passing in the version to the compiled code
-        define_macros = [('VERSION_INFO', __version__)],
+    Pybind11Extension("pymurtree",
+        (["src/main.cpp"]
+        + sorted(glob("murtree/code/MurTree/Utilities/*.cpp"))
+        + sorted(glob("murtree/code/MurTree/Engine/*.cpp"))
+        + sorted(glob("murtree/code/MurTree/Data Structures/*.cpp"))
         ),
+        define_macros = [('VERSION_INFO', __version__)] # passing in the version to the compiled code
+    )
 ]
 
 setup(
-    name="python_example",
+    name="pymurtree",
     version=__version__,
-    author="",
-    author_email="",
+    author="Jose Urra and Yasel Quintero",
+    author_email="dcc@tudelft.nl",
     url="https://github.com/MurTree/pymurtree",
-    description="A test project using pybind11",
-    long_description="",
+    description="Python wrapper for the MurTree project",
     ext_modules=ext_modules,
-    extras_require={"test": "pytest"},
-    # Currently, build_ext only provides an optional "highest supported C++
-    # level" feature, but in the future it may provide more features.
-    cmdclass={
-              "build_ext": build_ext, 
-            },
-    zip_safe=False,
     python_requires=">=3.7",
+    cmdclass={"build_ext": build_ext}
 )
