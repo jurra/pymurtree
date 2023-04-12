@@ -39,3 +39,7 @@ MANIFEST
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
+
+# python ignore
+_no_*
+**/__pycache__/
