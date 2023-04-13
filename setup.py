@@ -37,5 +37,6 @@ setup(
     description="Python wrapper for the MurTree project",
     ext_modules=ext_modules,
     python_requires=">=3.7",
-    cmdclass={"build_ext": build_ext}
+    cmdclass={"build_ext": build_ext},
+    dev_requires=['pytest']
 )
