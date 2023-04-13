@@ -1,8 +1,8 @@
 
 # Here we test the parameter handler using pytest
 # Path: tests\test_murtree.py
-
 import sys
+import pytest
 from pymurtree import ParameterHandler
 
 
@@ -25,21 +25,27 @@ def test_define_float_parameter():
                                    "Main Parameters",
                                    0, # min value
                                    1000000) # max value
-
-def test_define_string_parameter():
+    
+@pytest.mark.parametrize("parameter_name, parameter_description, default_value, category, list", [
+    ("file", "Location to the dataset.", "", "Main Parameters", []), # FIXME: This fixes the weird error I get when I dont pass explicitly an empty list
+    ("feature-ordering", "Feature ordering strategy...", "in-order", "Main Parameters", ["in-order", "random", "best-first"]),
+])
+def test_define_string_parameter(parameter_name, parameter_description, 
+                                 default_value, category, list):
     handler = ParameterHandler()
     handler.define_new_category("Main Parameters", "Main Parameters")
-    handler.define_string_parameter("file", "Location to the dataset.", "", "Main Parameters")
+    handler.define_string_parameter(parameter_name, parameter_description, 
+                                    default_value, category, list)
 
 def test_define_integer_parameter():
     handler = ParameterHandler()
     handler.define_new_category("Algorithmic Parameters", "Algorithmic Parameters")
     handler.define_integer_parameter("upper-bound", 
                                      "Initial upper bound.", 
-                                     1000000, 
+                                     sys.maxsize, 
                                      "Algorithmic Parameters", 
                                      0, 
-                                     1000000)
+                                     sys.maxsize)
 
 def test_define_boolean_parameter():
     handler = ParameterHandler()
