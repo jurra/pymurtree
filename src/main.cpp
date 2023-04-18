@@ -31,6 +31,10 @@
 namespace py = pybind11;
 using namespace MurTree;
 
+// convert array of two dimensions to vector of vectors in cpp
+
+// convert numpy array to vector of vectors of vectors in cpp
+
 PYBIND11_MODULE(pymurtree, m){
 	py::class_<ParameterHandler> parameter_handler(m, "ParameterHandler");
     parameter_handler.def(py::init([](){ return new ParameterHandler(); }), py::keep_alive<0, 1>())
@@ -40,7 +44,8 @@ PYBIND11_MODULE(pymurtree, m){
                      .def("define_float_parameter", &ParameterHandler::DefineFloatParameter)
                      .def("define_boolean_parameter", &ParameterHandler::DefineBooleanParameter);
     py::class_<Solver> solver(m, "Solver");
-    solver.def(py::init([](ParameterHandler& parameter_handler){ return new Solver(parameter_handler); }), py::keep_alive<0, 1>())
+    solver.def(py::init([](ParameterHandler& parameter_handler){ 
+        return new Solver(parameter_handler); }), py::keep_alive<0, 1>())
           .def("solve", &Solver::Solve);
 }
 
