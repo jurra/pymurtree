@@ -21,7 +21,7 @@ if not os.path.exists("murtree"):
 
 ext_modules = [
     Pybind11Extension(package_name + '.' + extension_name,
-        (["src/pymurtree/main.cpp"]
+        (["src/pymurtree/bindings.cpp"]
         + sorted(glob("murtree/code/MurTree/Utilities/*.cpp"))
         + sorted(glob("murtree/code/MurTree/Engine/*.cpp"))
         + sorted(glob("murtree/code/MurTree/Data Structures/*.cpp"))
