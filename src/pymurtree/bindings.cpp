@@ -1,26 +1,5 @@
-//Distributed under the MIT license, see License.txt
-//Copyright © 2022 Emir Demirović
-
-//Code for the paper: 
-// "MurTree: optimal classification trees via dynamic programming and search", JMLR, 2022.
-//  Note that some of the comments directly refer to the paper:
-// 
-//Authors: Emir Demirović, Anna Lukina, Emmanuel Hebrard, Jeffrey Chan, James Bailey, Christopher Leckie, Kotagiri Ramamohanarao, Peter J. Stuckey
-//For any issues related to the code, please feel free to contact Dr Emir Demirović, e.demirovic@tudelft.nl
-
-#include "../murtree/code/MurTree/Engine/solver.h"
-#include "../murtree/code/MurTree/Engine/dataset_cache.h"
-#include "../murtree/code/MurTree/Engine/hyper_parameter_tuner.h"
-#include "../murtree/code/MurTree/Utilities/parameter_handler.h"
-#include "../murtree/code/MurTree/Utilities/stopwatch.h"
-// #include "../murtree/code/murtree.h
-
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
-#include <time.h>
-#include <algorithm>
+#include "parameter_handler.h"
+#include "solver.h"
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -35,7 +14,7 @@ using namespace MurTree;
 
 // convert numpy array to vector of vectors of vectors in cpp
 
-PYBIND11_MODULE(pymurtree, m){
+PYBIND11_MODULE(lib, m){
 	py::class_<ParameterHandler> parameter_handler(m, "ParameterHandler");
     parameter_handler.def(py::init([](){ return new ParameterHandler(); }), py::keep_alive<0, 1>())
                      .def("define_new_category", &ParameterHandler::DefineNewCategory)
