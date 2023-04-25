@@ -12,8 +12,13 @@ import pymurtree # This is the pybind11 module
 # it could be called _pymurtree since the code should be private
 
 class PyMurTree:
+    # define init function
+    def __init__(self, parameters):
+        self._parameters = m.ParameterHandler(parameters)
+
+
     @property
-    def parameters(self):
+    def parameter(self):
         '''
         Store parameters as a property in a dictionary
         how to declare properties in python
@@ -21,6 +26,9 @@ class PyMurTree:
 
         '''
         return self._parameters
+
+    def set_parameters()
+        return m.
 
     # OptimaDecisonTreeClassifier is a patch method that initializes the python object
     def optimal_decision_tree_classifier(self, max_depth=4, **kwargs): # This is in practice an init function to hold parameters to then call a constructor

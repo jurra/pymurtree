@@ -98,7 +98,7 @@ handler.define_integer_parameter("duplicate-factor",
                                     1, # min value
                                     1000000) # max value
 
-handler.define_integer_parameter("upper-bound",
+handler.define_integer_parameter( "upper-bound",
                                     "Initial upper bound.",
                                     1000000000, # default value
                                     "Algorithmic Parameters",
@@ -123,4 +123,4 @@ handler.define_string_parameter("hyper-parameter-splits-file",
                                 "Tuning Parameters", [])
 
 model = m.Solver(handler)
-model.solve(handler)
+result = model.solve(handler)

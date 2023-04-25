@@ -44,10 +44,14 @@ PYBIND11_MODULE(pymurtree, m){
                      .def("define_float_parameter", &ParameterHandler::DefineFloatParameter)
                      .def("define_boolean_parameter", &ParameterHandler::DefineBooleanParameter);
     py::class_<Solver> solver(m, "Solver");
-    solver.def(py::init([](ParameterHandler& parameter_handler){ 
-        return new Solver(parameter_handler); }), py::keep_alive<0, 1>())
-          .def("solve", &Solver::Solve);
+      solver.def(py::init([](ParameterHandler& parameter_handler){ 
+          return new Solver(parameter_handler); }), py::keep_alive<0, 1>())
+            .def("solve", &Solver::Solve);
     
     // This is needed to be able to return the tree after solving
     py::class_<SolverResult> solver_result(m, "SolverResult");
+      // solver_result.def(py::init([](Solver& solver){ 
+      //     return new SolverResult(solver); }), py::keep_alive<0, 1>())
+      //       .def("decision_tree", &SolverResult::decision_tree_);
+  
 }
