@@ -73,7 +73,6 @@ class OptimalDecisionTreeClassifier:
         if duplicate_factor is not None:
             self.__params.duplicate_factor = duplicate_factor
 
-        print("py_add: ", lib.py_add(9, 10))
 
         # initialize tree
         # self.__tree = ...
