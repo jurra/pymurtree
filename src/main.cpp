@@ -47,5 +47,7 @@ PYBIND11_MODULE(pymurtree, m){
     solver.def(py::init([](ParameterHandler& parameter_handler){ 
         return new Solver(parameter_handler); }), py::keep_alive<0, 1>())
           .def("solve", &Solver::Solve);
+    
+    // This is needed to be able to return the tree after solving
+    py::class_<SolverResult> solver_result(m, "SolverResult");
 }
-
