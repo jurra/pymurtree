@@ -123,3 +123,4 @@ handler.define_string_parameter("hyper-parameter-splits-file",
                                 "Tuning Parameters", [])
 
 model = m.Solver(handler)
+model.solve(handler)
