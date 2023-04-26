@@ -89,8 +89,21 @@ class OptimalDecisionTreeClassifier:
                                        self.__params.random_seed,
                                        self.__params.cache_type,
                                        self.__params.duplicate_factor)
-
-
+        
+        # With solve method we create the tree
+        self.__solver.solve(self.__params.time,
+                            self.__params.max_depth,
+                            self.__params.max_num_nodes,
+                            self.__params.sparse_coefficient,
+                            self.__params.verbose,
+                            self.__params.all_trees,
+                            self.__params.incremental_frequency,
+                            self.__params.similarity_lower_bound,
+                            self.__params.node_selection,
+                            self.__params.feature_ordering,
+                            self.__params.random_seed,
+                            self.__params.cache_type,
+                            self.__params.duplicate_factor)
         # initialize tree
         # self.__tree = ...
 
