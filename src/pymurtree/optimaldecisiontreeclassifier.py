@@ -18,7 +18,10 @@ class OptimalDecisionTreeClassifier:
                  cache_type: int = 0,
                  duplicate_factor: int = 1
                 ) -> None:
-        
+
+        self.__solver = None
+        self.__tree = None
+
         self.__params = Parameters(time, max_depth, max_num_nodes,
                                    sparse_coefficient, verbose,
                                    all_trees, incremental_frequency, 
@@ -26,9 +29,7 @@ class OptimalDecisionTreeClassifier:
                                    feature_ordering, random_seed,
                                    cache_type, duplicate_factor)
     
-        self.__tree = None
         #print(f"Using parameters: {self.__params}")
-
 
     def fit(self,
             x, y,
@@ -72,6 +73,22 @@ class OptimalDecisionTreeClassifier:
             self.__params.cache_type = cache_type
         if duplicate_factor is not None:
             self.__params.duplicate_factor = duplicate_factor
+
+        # Initialize solver
+        if self.__solver is None:
+            self.__solver = lib.Solver(self.__params.time,
+                                       self.__params.max_depth,
+                                       self.__params.max_num_nodes,
+                                       self.__params.sparse_coefficient,
+                                       self.__params.verbose,
+                                       self.__params.all_trees,
+                                       self.__params.incremental_frequency,
+                                       self.__params.similarity_lower_bound,
+                                       self.__params.node_selection,
+                                       self.__params.feature_ordering,
+                                       self.__params.random_seed,
+                                       self.__params.cache_type,
+                                       self.__params.duplicate_factor)
 
 
         # initialize tree
