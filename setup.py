@@ -15,8 +15,9 @@ if not os.path.exists("murtree"):
     repo_url = "https://github.com/MurTree/murtree.git"
     Repo.clone_from(repo_url, "murtree")
     repo = Repo("murtree")
-    commit = repo.commit("8f98216533eb946e7c472336dce945f335c54fec")
-    repo.git.checkout(commit)
+    repo.git.checkout('feature/pymurtree_compatible')
+    #commit = repo.commit("8f98216533eb946e7c472336dce945f335c54fec")
+    #repo.git.checkout(commit)
 
 
 ext_modules = [
