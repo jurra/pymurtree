@@ -156,7 +156,8 @@ PYBIND11_MODULE(lib, m){
                         ph.SetStringParameter("cache-type", "dataset");
                     }
           });
-
-          
+    
+    // This is needed to be able to return the tree after solving
+    py::class_<SolverResult> solver_result(m, "SolverResult");          
 }
 

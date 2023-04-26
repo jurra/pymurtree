@@ -104,13 +104,6 @@ class OptimalDecisionTreeClassifier:
                             self.__params.random_seed,
                             self.__params.cache_type,
                             self.__params.duplicate_factor)
-        # initialize tree
-        # self.__tree = ...
-
-        #print(x.shape)
-        #print(y.shape)
-        #print(f"Using parameters: {self.__params}")
-
 
     def predict():
         pass
