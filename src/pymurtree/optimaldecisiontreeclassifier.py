@@ -29,7 +29,6 @@ class OptimalDecisionTreeClassifier:
                                    feature_ordering, random_seed,
                                    cache_type, duplicate_factor)
     
-        #print(f"Using parameters: {self.__params}")
 
     def fit(self,
             x, y,
@@ -74,7 +73,7 @@ class OptimalDecisionTreeClassifier:
         if duplicate_factor is not None:
             self.__params.duplicate_factor = duplicate_factor
 
-        # Initialize solver
+        # Initialize solver (call cpp Solver class constructor)
         if self.__solver is None:
             self.__solver = lib.Solver(self.__params.time,
                                        self.__params.max_depth,
@@ -90,7 +89,8 @@ class OptimalDecisionTreeClassifier:
                                        self.__params.cache_type,
                                        self.__params.duplicate_factor)
         
-        # With solve method we create the tree
+        # Create the tree that will be used for predictions
+        # (call cpp Solver::Solve method)
         self.__solver.solve(self.__params.time,
                             self.__params.max_depth,
                             self.__params.max_num_nodes,
