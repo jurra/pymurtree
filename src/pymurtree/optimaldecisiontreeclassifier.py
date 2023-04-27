@@ -91,23 +91,29 @@ class OptimalDecisionTreeClassifier:
         
         # Create the tree that will be used for predictions
         # (call cpp Solver::Solve method)
-        self.__solver.solve(self.__params.time,
-                            self.__params.max_depth,
-                            self.__params.max_num_nodes,
-                            self.__params.sparse_coefficient,
-                            self.__params.verbose,
-                            self.__params.all_trees,
-                            self.__params.incremental_frequency,
-                            self.__params.similarity_lower_bound,
-                            self.__params.node_selection,
-                            self.__params.feature_ordering,
-                            self.__params.random_seed,
-                            self.__params.cache_type,
-                            self.__params.duplicate_factor)
+        self.__tree = self.__solver.solve(self.__params.time,
+                                          self.__params.max_depth,
+                                          self.__params.max_num_nodes,
+                                          self.__params.sparse_coefficient,
+                                          self.__params.verbose,
+                                          self.__params.all_trees,
+                                          self.__params.incremental_frequency,
+                                          self.__params.similarity_lower_bound,
+                                          self.__params.node_selection,
+                                          self.__params.feature_ordering,
+                                          self.__params.random_seed,
+                                          self.__params.cache_type,
+                                          self.__params.duplicate_factor)
 
-    def predict():
+    def predict(self):
         pass
 
 
-    def score():
-        pass
+    def score(self) -> int:
+        return self.__tree.misclassification_score()
+
+    def depth(self) -> int:
+        return self.__tree.tree_depth()
+
+    def num_nodes(self) -> int:
+        return self.__tree.tree_nodes()

@@ -1,6 +1,7 @@
 #include "parameters.h"
 #include "parameter_handler.h"
 #include "solver.h"
+#include "solver_result.h"
 
 #include <pybind11/pybind11.h>
 
@@ -15,7 +16,7 @@ unsigned int node_selection, unsigned int feature_ordering,
 int random_seed, unsigned int cache_type, int duplicate_factor)
 {
     ParameterHandler ph = DefineParameters();
-    ph.SetStringParameter("file", "_no_anneal.txt");
+    ph.SetStringParameter("file", "anneal.txt");
     ph.SetFloatParameter("time", time);
     ph.SetIntegerParameter("max-depth", max_depth);
     ph.SetIntegerParameter("max-num-nodes", max_num_nodes);
@@ -56,7 +57,7 @@ int random_seed, unsigned int cache_type, int duplicate_factor)
     return ph;
 }
 
-
+ 
 PYBIND11_MODULE(lib, m) {
 
     // Bindings for the MurTree::Solver class
@@ -69,7 +70,10 @@ PYBIND11_MODULE(lib, m) {
     unsigned int node_selection, unsigned int feature_ordering,
     int random_seed, unsigned int cache_type, int duplicate_factor) 
     {
-        ParameterHandler ph = createParameters();
+        ParameterHandler ph = createParameters(time, max_depth, max_num_nodes,
+        sparse_coefficient, verbose, all_trees, incremental_frequency,
+        similarity_lower_bound, node_selection, feature_ordering, random_seed,
+        cache_type, duplicate_factor);
 
         // Carry-out actions from murtree function main in main.cpp
         CheckParameters(ph);
@@ -84,20 +88,35 @@ PYBIND11_MODULE(lib, m) {
 
 
     // Bindings for the Solver::solve metod
-    solver.def("solve", []( const Solver &solver, unsigned int time, 
+    solver.def("solve", [](Solver &solver, unsigned int time, 
     unsigned int max_depth, unsigned int max_num_nodes, 
     float sparse_coefficient, bool verbose, bool all_trees, 
     bool incremental_frequency, bool similarity_lower_bound,
     unsigned int node_selection, unsigned int feature_ordering,
     int random_seed, unsigned int cache_type, int duplicate_factor)
     {
-        ParameterHandler ph = createParameters();
-
-        // Call Solver::solve
-        //solver.solve(ph)
+        ParameterHandler ph = createParameters(time, max_depth, max_num_nodes,
+        sparse_coefficient, verbose, all_trees, incremental_frequency,
+        similarity_lower_bound, node_selection, feature_ordering, random_seed,
+        cache_type, duplicate_factor);
+        CheckParameters(ph);
+        return solver.Solve(ph);
     });
     
     // Bindings for the MurTree::SolverResult class
-    py::class_<SolverResult> solver_result(m, "SolverResult");          
+    py::class_<SolverResult> solver_result(m, "SolverResult");
+
+    solver_result.def("misclassification_score", [](const SolverResult &solverresult) {
+        return solverresult.misclassifications;
+    });
+
+    solver_result.def("tree_depth", [](const SolverResult &solverresult) {
+        return solverresult.decision_tree_->Depth();
+    });
+
+    solver_result.def("tree_nodes", [](const SolverResult &solverresult) {
+        return solverresult.decision_tree_->NumNodes();
+    });
+
 }
 
