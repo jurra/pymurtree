@@ -16,7 +16,7 @@ unsigned int node_selection, unsigned int feature_ordering,
 int random_seed, unsigned int cache_type, int duplicate_factor)
 {
     ParameterHandler ph = DefineParameters();
-    ph.SetStringParameter("file", "anneal.txt");
+    ph.SetStringParameter("file", "./pymurtree_data/data.txt");
     ph.SetFloatParameter("time", time);
     ph.SetIntegerParameter("max-depth", max_depth);
     ph.SetIntegerParameter("max-num-nodes", max_num_nodes);
