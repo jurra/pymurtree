@@ -56,7 +56,8 @@ class OptimalDecisionTreeClassifier:
         df.to_csv(output_file, index=False, header=False, sep=" ")
 
     def fit(self,
-            x, y,
+            # x, y,
+            arr,
             time: int = None,
             max_depth: int = None,
             max_num_nodes: int = None,
@@ -103,11 +104,12 @@ class OptimalDecisionTreeClassifier:
             os.makedirs('./pymurtree_data')
         
         # Write data to txt file before calling the constructor
-        self.write_data_to_file(x, y, './pymurtree_data/data.txt')
+        # self.write_data_to_file(x, y, './pymurtree_data/data.txt')
 
         # Initialize solver (call cpp Solver class constructor)
         if self.__solver is None:
-            self.__solver = lib.Solver(self.__params.time,
+            self.__solver = lib.Solver(arr,
+                                       self.__params.time,
                                        self.__params.max_depth,
                                        self.__params.max_num_nodes,
                                        self.__params.sparse_coefficient,
@@ -123,7 +125,8 @@ class OptimalDecisionTreeClassifier:
         
         # Create the tree that will be used for predictions
         # (call cpp Solver::Solve method)
-        self.__tree = self.__solver.solve(self.__params.time,
+        self.__tree = self.__solver.solve(arr,
+                                          self.__params.time,
                                           self.__params.max_depth,
                                           self.__params.max_num_nodes,
                                           self.__params.sparse_coefficient,
