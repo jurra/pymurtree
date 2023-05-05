@@ -56,8 +56,8 @@ class OptimalDecisionTreeClassifier:
         df.to_csv(output_file, index=False, header=False, sep=" ")
 
     def fit(self,
-            # x, y,
-            arr,
+            x, y,
+            # arr,
             time: int = None,
             max_depth: int = None,
             max_num_nodes: int = None,
@@ -72,6 +72,17 @@ class OptimalDecisionTreeClassifier:
             cache_type: int = None,
             duplicate_factor: int = None) -> None:
         
+        # Check data entry
+        if x is None:
+            raise ValueError('x is None')
+        if y is None:
+            raise ValueError('y is None')
+        if x is not None and y is not None:
+            if x.shape[0] == y.shape[0]:
+                    self.__params.arr = np.concatenate((y.reshape(-1,1), x), axis=1)
+            else: 
+                raise ValueError('x and y have different number of rows')
+            
         if time is not None:
             self.__params.time = time
         if max_depth is not None:
@@ -100,15 +111,15 @@ class OptimalDecisionTreeClassifier:
             self.__params.duplicate_factor = duplicate_factor
 
         # If ./pymurtree_data directory does not exist, create it
-        if not os.path.exists('./pymurtree_data'):
-            os.makedirs('./pymurtree_data')
+        # if not os.path.exists('./pymurtree_data'):
+            # os.makedirs('./pymurtree_data')
         
         # Write data to txt file before calling the constructor
         # self.write_data_to_file(x, y, './pymurtree_data/data.txt')
 
         # Initialize solver (call cpp Solver class constructor)
         if self.__solver is None:
-            self.__solver = lib.Solver(arr,
+            self.__solver = lib.Solver(self.__params.arr,
                                        self.__params.time,
                                        self.__params.max_depth,
                                        self.__params.max_num_nodes,
@@ -125,8 +136,7 @@ class OptimalDecisionTreeClassifier:
         
         # Create the tree that will be used for predictions
         # (call cpp Solver::Solve method)
-        self.__tree = self.__solver.solve(arr,
-                                          self.__params.time,
+        self.__tree = self.__solver.solve(self.__params.time,
                                           self.__params.max_depth,
                                           self.__params.max_num_nodes,
                                           self.__params.sparse_coefficient,

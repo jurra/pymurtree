@@ -162,7 +162,7 @@ PYBIND11_MODULE(lib, m) {
         sparse_coefficient, verbose, all_trees, incremental_frequency,
         similarity_lower_bound, node_selection, feature_ordering, random_seed,
         cache_type, duplicate_factor);
-        CheckParameters(ph);
+        //CheckParameters(ph);
         return solver.Solve(ph);
     });
     
