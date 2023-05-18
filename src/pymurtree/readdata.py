@@ -1,6 +1,6 @@
 import pandas
 
-def read_data(path: str) -> tuple:
+def read_from_file(path: str) -> tuple:
         """
         Reads data from a space-separated text file with the following format:
         The first column contains the target variable (y), and the remaining columns 

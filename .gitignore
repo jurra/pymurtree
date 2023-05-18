@@ -44,3 +44,4 @@ pip-delete-this-directory.txt
 _no_*
 **/__pycache__/
 *pymurtree_data/
+**/*.cpython*

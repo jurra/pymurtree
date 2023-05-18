@@ -2,6 +2,7 @@ from pymurtree import lib
 import pymurtree as mrt
 import numpy as np
 import pandas
+from pymurtree.readdata import read_from_file
 
 def read_data(path: str, pass_arr: bool=True) -> np.ndarray:
         """
@@ -30,9 +31,18 @@ def read_data(path: str, pass_arr: bool=True) -> np.ndarray:
             y = data[:, 0]
         return x, y
 
-x, y = read_data("_no_anneal.txt", pass_arr=False)
+x, y = read_from_file("_no_anneal.txt")
+x = x.to_numpy().astype(np.int32)
+y = y.to_numpy().astype(np.int32)
+
 my_first_array = np.concatenate((y.reshape(-1,1), x), axis=1)
 my_second_array = read_data("_no_anneal.txt", pass_arr=True)
+
+def read_from_file(path: str) -> tuple:
+    x, y = lib.read_from_file("_no_anneal.txt")
+    x = x.to_numpy()
+    y = y.to_numpy()
+    return np.concatenate((y.reshape(-1,1), x), axis=1).astype(np.int32)
 
 print(type(my_first_array) == type(my_second_array))
 print(np.shape(my_first_array) == np.shape(my_second_array))
@@ -40,11 +50,9 @@ print(my_first_array == my_second_array)
 
 # data = read_data("_no_anneal.txt")
 
-model = mrt.OptimalDecisionTreeClassifier()
-# model.fit(data, duplicate_factor=2)
-model.fit(x, y, duplicate_factor=2)
+model = mrt.OptimalDecisionTreeClassifier(max_depth=4, duplicate_factor=1, max_num_nodes=15)
+model.fit(x, y)
+print(model.score())
 
-# v = lib.read_data(data.astype(np.int32),2)
-# # v = lib.numpy_to_vector(data.astype(np.int32))
-# print(v)
+
 
