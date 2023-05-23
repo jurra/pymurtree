@@ -159,17 +159,13 @@ PYBIND11_MODULE(lib, m) {
         cache_type, duplicate_factor);
 
         // Carry-out actions from murtree function main in main.cpp
-        // CheckParameters(ph); // TODO: This should be uncommented later
+        CheckParameters(ph); // TODO: This should be uncommented later
         if (verbose) { 
             ph.PrintParameterValues();
         }
-        
-        // Add the data to the parameter handler by converting it to a vector of vectors
-        // And reading it in the DL format so that is compatible with the solver
-        ph.SetData(ReadDataDL(NumpyToVectors(arr), duplicate_factor));
-
         // Construct the Solver object
-        return new Solver(ph); 
+        // We turn the numpy array into a vector of feature vectors before
+        return new Solver(ph, ReadDataDL(NumpyToVectors(arr), duplicate_factor));
 
     }), py::keep_alive<0, 1>());
 
@@ -187,8 +183,7 @@ PYBIND11_MODULE(lib, m) {
         sparse_coefficient, verbose, all_trees, incremental_frequency,
         similarity_lower_bound, node_selection, feature_ordering, random_seed,
         cache_type, duplicate_factor);
-        //CheckParameters(ph);
-        ph.SetData(ReadDataDL(NumpyToVectors(arr), duplicate_factor));
+        CheckParameters(ph);
 
         return solver.Solve(ph);
     });
