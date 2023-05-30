@@ -32,8 +32,8 @@ def read_data(path: str, pass_arr: bool=True) -> np.ndarray:
         return x, y
 
 x, y = read_from_file("_no_anneal.txt")
-x = x.to_numpy().astype(np.int32)
-y = y.to_numpy().astype(np.int32)
+x = x.to_numpy()
+y = y.to_numpy()
 
 my_first_array = np.concatenate((y.reshape(-1,1), x), axis=1)
 my_second_array = read_data("_no_anneal.txt", pass_arr=True)
@@ -51,7 +51,7 @@ print(my_first_array == my_second_array)
 # data = read_data("_no_anneal.txt")
 
 model = mrt.OptimalDecisionTreeClassifier(max_depth=4, duplicate_factor=1, max_num_nodes=15)
-model.fit(x, y)
+result = model.fit(x, y)
 print(model.score())
 
 

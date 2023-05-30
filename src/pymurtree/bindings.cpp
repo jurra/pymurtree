@@ -13,6 +13,21 @@
 namespace py = pybind11;
 using namespace MurTree;
 
+
+// std::vector<double> NdarrayToVector(py::array_t<double>& arr) {
+//     auto buffer = arr.request();
+//     double* ptr = (double*) buffer.ptr;
+//     std::vector<double> output_vector(ptr, ptr + buffer.shape[0]);
+//     return output_vector;
+// }
+
+std::vector<bool> NdarrayToVector(const py::array_t<bool>& arr) {
+    auto buffer = arr.request();
+    bool* ptr = (bool*) buffer.ptr;
+    std::vector<bool> boolean_vector(ptr, ptr + buffer.size);
+    return boolean_vector;
+}
+
 // We need to convert the numpy array to a vector of vectors
 // So that we can pass it to the solver
 std::vector<std::vector<int>> NumpyToVectors(py::array_t<int, py::array::c_style>& arr) {
@@ -28,6 +43,7 @@ std::vector<std::vector<int>> NumpyToVectors(py::array_t<int, py::array::c_style
     return vectors;
 }
 
+// FIXME: std::vector<std::vector<FeatureVectorBinary>> ReadDataDL(const std::vector<std::vector<unsigned int>>& vector, int duplicate_instances_factor)
 std::vector<std::vector<FeatureVectorBinary>> ReadDataDL(const std::vector<std::vector<int>>& vector, int duplicate_instances_factor)
 {
     runtime_assert(duplicate_instances_factor > 0);
@@ -142,6 +158,31 @@ PYBIND11_MODULE(lib, m) {
             py::arg("node_selection"), py::arg("feature_ordering"), py::arg("random_seed"),
             py::arg("cache_type"), py::arg("duplicate_factor"), "Creates a parameter handler object");
 
+    
+    // The SolverResult returns a tree with the methods we need for the predict method of the python wrapper
+    py::class_<SolverResult> solver_result(m, "SolverResult");
+    // solver_result.def("classify", [](const SolverResult &solverresult, py::array_t<int, py::array::c_style>& arr){
+    //     //TODO We need to make sure we are getting the right data here
+    //     return solverresult.decision_tree_->Classify(FeatureVectorBinary(NumpyToVectors(arr)[0], 0));
+    // });
+
+    solver_result.def("classify", [](const SolverResult &solverresult, const py::array_t<bool>&  arr){
+        return solverresult.decision_tree_->Classify(new MurTree::FeatureVectorBinary(NdarrayToVector(arr), 0));
+    });
+
+    solver_result.def("misclassification_score", [](const SolverResult &solverresult) {
+        return solverresult.misclassifications;
+    });
+
+    solver_result.def("tree_depth", [](const SolverResult &solverresult) {
+        return solverresult.decision_tree_->Depth();
+    });
+
+    solver_result.def("tree_nodes", [](const SolverResult &solverresult) {
+        return solverresult.decision_tree_->NumNodes();
+    });
+    
+    
     // Bindings for the MurTree::Solver class
     py::class_<Solver> solver(m, "Solver");
     
@@ -188,19 +229,16 @@ PYBIND11_MODULE(lib, m) {
         return solver.Solve(ph);
     });
     
-    // Bindings for the MurTree::SolverResult class
-    py::class_<SolverResult> solver_result(m, "SolverResult");
 
-    solver_result.def("misclassification_score", [](const SolverResult &solverresult) {
-        return solverresult.misclassifications;
-    });
 
-    solver_result.def("tree_depth", [](const SolverResult &solverresult) {
-        return solverresult.decision_tree_->Depth();
-    });
-
-    solver_result.def("tree_nodes", [](const SolverResult &solverresult) {
-        return solverresult.decision_tree_->NumNodes();
-    });
+    // Bindings for the classify method we need as part of the implmentation of predict
+    py::class_<MurTree::DecisionNode>(m, "DecisionNode")
+        .def(py::init<>())
+        // .def_static("CreateLabelNode", &MurTree::DecisionNode::CreateLabelNode)
+        // .def_static("CreateFeatureNodeWithNullChildren", &MurTree::DecisionNode::CreateFeatureNodeWithNullChildren)
+        // .def("Depth", &MurTree::DecisionNode::Depth)
+        // .def("NumNodes", &MurTree::DecisionNode::NumNodes)
+        // .def("ComputeMisclassificationScore", &MurTree::DecisionNode::ComputeMisclassificationScore)
+        .def("Classify", &MurTree::DecisionNode::Classify);
 }
 
