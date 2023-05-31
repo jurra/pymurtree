@@ -13,9 +13,10 @@ __version__ = "0.0.1"
 # Clone the Murtree repository and checkout last commit before DCC changes
 if not os.path.exists("murtree"):
     repo_url = "https://github.com/MurTree/dcctree.git"
-    Repo.clone_from(repo_url, "murtree")
-    repo = Repo("murtree")
-    repo.git.checkout('feature/pymurtree_compatible')
+    Repo.clone_from(repo_url, "dcctree")
+    repo = Repo("dcctree")
+    repo.git.checkout('develop')
+    os.rename("dcctree", "murtree")
 
 ext_modules = [
     Pybind11Extension(package_name + '.' + extension_name,
@@ -40,5 +41,6 @@ setup(
     description="Python wrapper for the MurTree project",
     packages=[package_name],        # only look for a packages called <package_name>
     package_dir={"": "src"},        # look for the root package in the src directory
-    ext_modules=ext_modules
+    ext_modules=ext_modules,
+    dev_requires=['pytest']
 )
