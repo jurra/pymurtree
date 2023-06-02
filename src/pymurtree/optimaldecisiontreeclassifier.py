@@ -1,9 +1,7 @@
-import pandas as pd
-import numpy as np
-import os
-
 from . import lib
 from pymurtree.parameters import Parameters
+import pandas as pd
+import numpy as np
 
 class OptimalDecisionTreeClassifier:
     def __init__(self,
@@ -35,7 +33,6 @@ class OptimalDecisionTreeClassifier:
 
     def fit(self,
             x, y,
-            # arr,
             time: int = None,
             max_depth: int = None,
             max_num_nodes: int = None,
@@ -50,7 +47,7 @@ class OptimalDecisionTreeClassifier:
             cache_type: int = None,
             duplicate_factor: int = None) -> None:
         """
-        Fits a PyMurTree model to the given training data.
+        Fits a MurTree decision tree to the given data.
 
         Args:
             x (numpy.ndarray): A 2D array that represents the input features of the training data.
@@ -76,10 +73,10 @@ class OptimalDecisionTreeClassifier:
             ValueError: If x or y is None or if they have different number of rows.
 
         Examples:
-            >>> model = PyMurTree()
-            >>> x_train = np.array([[1, 2], [3, 4]])
-            >>> y_train = np.array([0, 1])
-            >>> model.fit(x_train, y_train)
+            >>> model = OptimalDecisionTreeClassifier()
+            >>> x = np.array([[1, 2], [3, 4]])
+            >>> y = np.array([0, 1])
+            >>> model.fit(x, y, max_depth=4, max_num_nodes=15, time=600)
 
         """
         # Check data entry
@@ -89,10 +86,11 @@ class OptimalDecisionTreeClassifier:
             raise ValueError('y is None')
         if x is not None and y is not None:
             if x.shape[0] == y.shape[0]:
-                    self.__params.arr = np.concatenate((y.reshape(-1,1), x), axis=1).astype(np.int32) # needs to be int32 to properly call the cpp code
+                    arr = np.concatenate((y.reshape(-1,1), x), axis=1).astype(np.int32) # needs to be int32 to properly call the cpp code
             else: 
                 raise ValueError('x and y have different number of rows')
             
+
         if time is not None:
             self.__params.time = time
         if max_depth is not None:
@@ -122,7 +120,7 @@ class OptimalDecisionTreeClassifier:
 
         # Initialize solver (call cpp Solver class constructor)
         if self.__solver is None:
-            self.__solver = lib.Solver(self.__params.arr,
+            self.__solver = lib.Solver(arr,
                                        self.__params.time,
                                        self.__params.max_depth,
                                        self.__params.max_num_nodes,
@@ -138,7 +136,7 @@ class OptimalDecisionTreeClassifier:
                                        self.__params.duplicate_factor)
         
         # Creates the tree that will be used for predictions
-        self.__tree = self.__solver.solve(self.__params.arr,
+        self.__tree = self.__solver.solve(arr,
                                           self.__params.time,
                                           self.__params.max_depth,
                                           self.__params.max_num_nodes,
@@ -157,13 +155,13 @@ class OptimalDecisionTreeClassifier:
 
     def predict(self, x: np.ndarray) -> np.ndarray:
         """
-        Predicts the target variable for the given input features.
+        Predicts the target variable for the given binary features.
         
         Args:
-            x (numpy.ndarray): A 2D array that represents the input features of the test data.
+            x (numpy.ndarray): A 2D array of input features. Each row represents a set of features. 
         
         Returns:
-            numpy.ndarray: A 1D array that represents the predicted target variable of the test data.
+            numpy.ndarray: A 1D array with the predicted target variables.
 
         """
         pass
