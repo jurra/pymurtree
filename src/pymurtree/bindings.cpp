@@ -9,12 +9,10 @@
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
 
-
 namespace py = pybind11;
 using namespace MurTree;
 
-// We need to convert the numpy array to a vector of vectors
-// So that we can pass it to the solver
+// Utility function to convert a 2D numpy array to an std::vector<std::vector<int>>
 std::vector<std::vector<int>> NumpyToVectors(py::array_t<int, py::array::c_style>& arr) {
     auto buf = arr.request();
     int* ptr = (int*) buf.ptr;
@@ -109,8 +107,9 @@ int random_seed, unsigned int cache_type, int duplicate_factor)
     return ph;
 }
 
- 
-PYBIND11_MODULE(lib, m) {   
+
+PYBIND11_MODULE(lib, m) {
+
     // This exposure is to test that we can properly pass the data type we need to pass to the solver
     py::class_<FeatureVectorBinary> feature_vector_binary(m, "FeatureVectorBinary");
     
