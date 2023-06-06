@@ -4,6 +4,7 @@
 #include "solver_result.h"
 #include "feature_vector_binary.h"
 #include "file_reader.h"
+#include "exporttree.h"
 
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
@@ -201,5 +202,11 @@ PYBIND11_MODULE(lib, m) {
     solver_result.def("tree_nodes", [](const SolverResult &solverresult) {
         return solverresult.decision_tree_->NumNodes();
     });
+
+    // Bindings for the ExportTree class
+    solver_result.def("export_text", [](const SolverResult &solverresult, std::string filepath) {
+        ExportTree::exportText(solverresult.decision_tree_, filepath);
+    });
+
 }
 
