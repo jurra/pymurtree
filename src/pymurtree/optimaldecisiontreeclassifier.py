@@ -1,6 +1,7 @@
-from pymurtree.parameters import Parameters
-import pandas
 from . import lib
+from pymurtree.parameters import Parameters
+import pandas as pd
+import numpy as np
 
 class OptimalDecisionTreeClassifier:
     def __init__(self,
@@ -45,7 +46,51 @@ class OptimalDecisionTreeClassifier:
             random_seed: int = None,
             cache_type: int = None,
             duplicate_factor: int = None) -> None:
-        
+        """
+        Fits a MurTree decision tree to the given data.
+
+        Args:
+            x (numpy.ndarray): A 2D array that represents the input features of the training data.
+            y (numpy.ndarray): A 1D array that represents the target variable of the training data.
+            time (int, optional): The maximum time budget in seconds allowed for fitting the model. Defaults to None.
+            max_depth (int, optional): The maximum depth of the trees in the ensemble. Defaults to None.
+            max_num_nodes (int, optional): The maximum number of nodes for each tree in the ensemble. Defaults to None.
+            sparse_coefficient (float, optional): The sparsity coefficient used for tree pruning. Defaults to None.
+            verbose (bool, optional): If True, prints the progress of the training process. Defaults to None.
+            all_trees (bool, optional): If True, returns all trees generated during the training process. Defaults to None.
+            incremental_frequency (bool, optional): If True, uses incremental frequency counting. Defaults to None.
+            similarity_lower_bound (bool, optional): If True, uses similarity lower bound pruning. Defaults to None.
+            node_selection (int, optional): The method used for node selection. Defaults to None.
+            feature_ordering (int, optional): The method used for feature ordering. Defaults to None.
+            random_seed (int, optional): The random seed for the training process. Defaults to None.
+            cache_type (int, optional): The type of cache used for storing the intermediate results. Defaults to None.
+            duplicate_factor (int, optional): The duplicate factor used for parallelization. Defaults to None.
+
+        Returns:
+            None
+
+        Raises:
+            ValueError: If x or y is None or if they have different number of rows.
+
+        Examples:
+            >>> model = OptimalDecisionTreeClassifier()
+            >>> x = np.array([[1, 2], [3, 4]])
+            >>> y = np.array([0, 1])
+            >>> model.fit(x, y, max_depth=4, max_num_nodes=15, time=600)
+
+        """
+        # Check data entry
+        if x is None:
+            raise ValueError('x is None')
+        if y is None:
+            raise ValueError('y is None')
+        if x is not None and y is not None:
+            if x.shape[0] == y.shape[0]:
+                    arr = np.concatenate((y.reshape(-1,1), x), axis=1).astype(np.int32) # needs to be int32 to properly call the cpp code
+            else: 
+                raise ValueError('x and y have different number of rows')
+            
+
         if time is not None:
             self.__params.time = time
         if max_depth is not None:
@@ -75,7 +120,8 @@ class OptimalDecisionTreeClassifier:
 
         # Initialize solver (call cpp Solver class constructor)
         if self.__solver is None:
-            self.__solver = lib.Solver(self.__params.time,
+            self.__solver = lib.Solver(arr,
+                                       self.__params.time,
                                        self.__params.max_depth,
                                        self.__params.max_num_nodes,
                                        self.__params.sparse_coefficient,
@@ -89,9 +135,9 @@ class OptimalDecisionTreeClassifier:
                                        self.__params.cache_type,
                                        self.__params.duplicate_factor)
         
-        # Create the tree that will be used for predictions
-        # (call cpp Solver::Solve method)
-        self.__tree = self.__solver.solve(self.__params.time,
+        # Creates the tree that will be used for predictions
+        self.__tree = self.__solver.solve(arr,
+                                          self.__params.time,
                                           self.__params.max_depth,
                                           self.__params.max_num_nodes,
                                           self.__params.sparse_coefficient,
@@ -105,7 +151,19 @@ class OptimalDecisionTreeClassifier:
                                           self.__params.cache_type,
                                           self.__params.duplicate_factor)
 
-    def predict(self):
+        
+
+    def predict(self, x: np.ndarray) -> np.ndarray:
+        """
+        Predicts the target variable for the given binary features.
+        
+        Args:
+            x (numpy.ndarray): A 2D array of input features. Each row represents a set of features. 
+        
+        Returns:
+            numpy.ndarray: A 1D array with the predicted target variables.
+
+        """
         pass
 
 
