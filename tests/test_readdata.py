@@ -9,6 +9,7 @@ import pprint
 
 @pytest.fixture
 def dl_from_file() -> np.ndarray:
+    ''' Read data from DL formatted file and return as numpy array'''
     x, y = read_from_file("_no_anneal.txt")
     x = x.to_numpy()
     y = y.to_numpy()
@@ -16,14 +17,17 @@ def dl_from_file() -> np.ndarray:
 
 @pytest.fixture
 def dl_x_y() -> tuple:
+    ''' Read data from DL formatted file and return as tuple with two numpy arrays 
+    (x, y) where x is the feature vectors and y is the labels'''
     x, y = read_from_file("_no_anneal.txt")
     return x, y
 
 @pytest.fixture
-def dl_data() -> np.ndarray:
+def dl_data_sample() -> np.ndarray:
+
     return np.array([[1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
-                        [1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
-                        [1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+                     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+                     [1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
                     ]).astype(np.int32)
                     
 
@@ -47,15 +51,15 @@ def test_np_to_vectors(dl_x_y):
     assert len(cpp_vectors) == x.shape[0]
     assert type(cpp_vectors[0][0] == int)
 
-def test_nparray_to_feature_vectors(dl_data):
+def test_nparray_to_feature_vectors(dl_data_sample):
     ''' Test that the numpy array is converted to a list of feature vectors'''
 
-    feature_vectors = lib._nparray_to_feature_vectors(dl_data, 1)
+    feature_vectors = lib._nparray_to_feature_vectors(dl_data_sample, 1)
 
     assert feature_vectors is not None
     assert type(feature_vectors) == list
     assert type(feature_vectors[0]== lib.FeatureVectorBinary)
-    assert len(feature_vectors) == dl_data.shape[0] - 1
+    assert len(feature_vectors) == dl_data_sample.shape[0] - 1
 
 def test_compare_feature_vectors(dl_from_file):
     ''' Test that we get exactly the same feature vectors from the file and from the numpy array'''

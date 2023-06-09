@@ -13,7 +13,15 @@
 namespace py = pybind11;
 using namespace MurTree;
 
-// Utility function to convert a 2D numpy array to an std::vector<std::vector<int>>
+// This function is used to convert a numpy array to a vector of booleans
+std::vector<bool> NdarrayToVector(const py::array_t<bool>& arr) {
+    auto buffer = arr.request();
+    bool* ptr = (bool*) buffer.ptr;
+    std::vector<bool> boolean_vector(ptr, ptr + buffer.size);
+    return boolean_vector;
+}
+
+// This function is used to convert a numpy array to a vector of vectors
 std::vector<std::vector<int>> NumpyToVectors(py::array_t<int, py::array::c_style>& arr) {
     auto buf = arr.request();
     int* ptr = (int*) buf.ptr;
@@ -27,6 +35,8 @@ std::vector<std::vector<int>> NumpyToVectors(py::array_t<int, py::array::c_style
     return vectors;
 }
 
+// This function is used to convert a numpy array to a vector of vectors holding feature vector binary types
+// that were defined in the murtree library
 std::vector<std::vector<FeatureVectorBinary>> ReadDataDL(const std::vector<std::vector<int>>& vector, int duplicate_instances_factor)
 {
     runtime_assert(duplicate_instances_factor > 0);
@@ -135,13 +145,52 @@ PYBIND11_MODULE(lib, m) {
 
     py::class_<ParameterHandler> parameter_handler(m, "ParameterHandler");
 
-    // Expose the create parameters function to python
+    // Expose the create parameters function to python so that we can create a parameter handler object from python
+    // To invoke the Solver constructor
     m.def("_create_parameters", createParameters, py::arg("time"), py::arg("max_depth"),
             py::arg("max_num_nodes"), py::arg("sparse_coefficient"), py::arg("verbose"),
             py::arg("all_trees"), py::arg("incremental_frequency"), py::arg("similarity_lower_bound"),
             py::arg("node_selection"), py::arg("feature_ordering"), py::arg("random_seed"),
             py::arg("cache_type"), py::arg("duplicate_factor"), "Creates a parameter handler object");
 
+    
+    // The SolverResult returns a tree with the methods we need for the predict method of the python wrapper
+    py::class_<SolverResult> solver_result(m, "SolverResult");
+
+    solver_result.def("_classify", [](const SolverResult &solverresult, const py::array_t<bool>&  arr){
+        return solverresult.decision_tree_->Classify(new MurTree::FeatureVectorBinary(NdarrayToVector(arr), 0));
+    });
+
+    // This runs the classify method on each data point to get a vector of classifications
+    solver_result.def("_predict", [](const SolverResult &solverresult, py::array_t<int, py::array::c_style>& arr){
+        // Define the structure of the numpy array that we will return
+        auto buf = arr.request();
+        int* ptr = (int*) buf.ptr;
+        int nrows = buf.shape[0];
+        int ncols = buf.shape[1];
+
+        std::vector<int> predictions(nrows);
+        // Here we make the classification for all rows in the data
+        for (int i = 0; i < nrows; i++) {
+            predictions[i] = solverresult.decision_tree_->Classify(new MurTree::FeatureVectorBinary(std::vector<bool>(ptr + i * ncols, ptr + (i+1) * ncols), 0));
+        }
+        // Predictions are returned as a numpy array
+        return py::array_t<int>(nrows, predictions.data());
+    });
+
+    solver_result.def("misclassification_score", [](const SolverResult &solverresult) {
+        return solverresult.misclassifications;
+    });
+
+    solver_result.def("tree_depth", [](const SolverResult &solverresult) {
+        return solverresult.decision_tree_->Depth();
+    });
+
+    solver_result.def("tree_nodes", [](const SolverResult &solverresult) {
+        return solverresult.decision_tree_->NumNodes();
+    });
+    
+    
     // Bindings for the MurTree::Solver class
     py::class_<Solver> solver(m, "Solver");
     
@@ -188,16 +237,7 @@ PYBIND11_MODULE(lib, m) {
         return solver.Solve(ph);
     });
     
-    // Bindings for the MurTree::SolverResult class
-    py::class_<SolverResult> solver_result(m, "SolverResult");
 
-    solver_result.def("misclassification_score", [](const SolverResult &solverresult) {
-        return solverresult.misclassifications;
-    });
-
-    solver_result.def("tree_depth", [](const SolverResult &solverresult) {
-        return solverresult.decision_tree_->Depth();
-    });
 
     solver_result.def("tree_nodes", [](const SolverResult &solverresult) {
         return solverresult.decision_tree_->NumNodes();

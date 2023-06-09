@@ -1,8 +1,22 @@
-from . import lib
-from pymurtree.parameters import Parameters
 import pandas as pd
 import numpy as np
+import os
 
+from . import lib
+from pymurtree.parameters import Parameters
+
+def standardize_to_dtype_int32(np_array: np.ndarray) -> np.ndarray:
+    '''
+    By using a dtype object, we can make the method more robust 
+    and ensure consistent behavior across different systems and configurations.
+    '''
+    int32_dtype = np.dtype(np.int32)
+    if np_array.dtype != int32_dtype:
+        np_array = np_array.astype(int32_dtype)
+        return np_array
+    else:
+        return np_array
+    
 class OptimalDecisionTreeClassifier:
     def __init__(self,
                  time: int = 600,
@@ -47,7 +61,7 @@ class OptimalDecisionTreeClassifier:
             cache_type: int = None,
             duplicate_factor: int = None) -> None:
         """
-        Fits a MurTree decision tree to the given data.
+        Fits a PyMurTree model to the given training data.
 
         Args:
             x (numpy.ndarray): A 2D array that represents the input features of the training data.
@@ -73,10 +87,10 @@ class OptimalDecisionTreeClassifier:
             ValueError: If x or y is None or if they have different number of rows.
 
         Examples:
-            >>> model = OptimalDecisionTreeClassifier()
-            >>> x = np.array([[1, 2], [3, 4]])
-            >>> y = np.array([0, 1])
-            >>> model.fit(x, y, max_depth=4, max_num_nodes=15, time=600)
+            >>> model = PyMurTree()
+            >>> x_train = np.array([[1, 2], [3, 4]])
+            >>> y_train = np.array([0, 1])
+            >>> model.fit(x_train, y_train)
 
         """
         # Check data entry
@@ -85,12 +99,13 @@ class OptimalDecisionTreeClassifier:
         if y is None:
             raise ValueError('y is None')
         if x is not None and y is not None:
+            x = standardize_to_dtype_int32(x) # These are required otherwise the model will not work and test will fail
+            y = standardize_to_dtype_int32(y)
             if x.shape[0] == y.shape[0]:
-                    arr = np.concatenate((y.reshape(-1,1), x), axis=1).astype(np.int32) # needs to be int32 to properly call the cpp code
+                    self.__params.arr = np.concatenate((y.reshape(-1,1), x), axis=1)
             else: 
                 raise ValueError('x and y have different number of rows')
             
-
         if time is not None:
             self.__params.time = time
         if max_depth is not None:
@@ -120,7 +135,7 @@ class OptimalDecisionTreeClassifier:
 
         # Initialize solver (call cpp Solver class constructor)
         if self.__solver is None:
-            self.__solver = lib.Solver(arr,
+            self.__solver = lib.Solver(self.__params.arr,
                                        self.__params.time,
                                        self.__params.max_depth,
                                        self.__params.max_num_nodes,
@@ -136,7 +151,7 @@ class OptimalDecisionTreeClassifier:
                                        self.__params.duplicate_factor)
         
         # Creates the tree that will be used for predictions
-        self.__tree = self.__solver.solve(arr,
+        self.__tree = self.__solver.solve(self.__params.arr,
                                           self.__params.time,
                                           self.__params.max_depth,
                                           self.__params.max_num_nodes,
@@ -150,22 +165,28 @@ class OptimalDecisionTreeClassifier:
                                           self.__params.random_seed,
                                           self.__params.cache_type,
                                           self.__params.duplicate_factor)
-
         
+        # This should return a tree object that will be used for predictions
+        return self.__tree        
 
     def predict(self, x: np.ndarray) -> np.ndarray:
         """
-        Predicts the target variable for the given binary features.
-        
+        Predicts the target variable for the given input features.
+
         Args:
-            x (numpy.ndarray): A 2D array of input features. Each row represents a set of features. 
-        
+            x (numpy.ndarray): A 2D array that represents the input features of the test data.
+                Each row corresponds to an instance, and each column corresponds to a feature.
+
         Returns:
-            numpy.ndarray: A 1D array with the predicted target variables.
-
+            numpy.ndarray: A 1D array that represents the predicted target variable of the test data.
+                The i-th element in this array corresponds to the predicted target variable for the i-th instance in `x`.
         """
-        pass
+        # Check data entry
+        x = standardize_to_dtype_int32(x)
+        predictions = self.__tree._predict(x) # Obtain predictions from the decision tree model using the _predict binding
+        return predictions # Return the 1D array of predictions/labels
 
+    
 
     def score(self) -> int:
         return self.__tree.misclassification_score()
@@ -175,9 +196,3 @@ class OptimalDecisionTreeClassifier:
 
     def num_nodes(self) -> int:
         return self.__tree.tree_nodes()
-
-    def export_text(self, filepath: str = '') -> None:
-        if self.__tree is None:
-            raise ValueError('self.__tree is None')
-        else:
-            self.__tree.export_text(filepath)

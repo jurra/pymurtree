@@ -1,0 +1,41 @@
+Main Parameters
+        -file = ../../tests/fixtures/test_dataset.txt
+        -time = 600
+        -max-depth = 4
+        -max-num-nodes = 15
+        -sparse-coefficient = 0
+        -verbose = 1
+        -all-trees = 0
+        -result-file = 
+Algorithmic Parameters
+        -incremental-frequency = 1
+        -similarity-lower-bound = 1
+        -node-selection = dynamic
+        -feature-ordering = in-order
+        -random-seed = 3
+        -cache-type = dataset
+        -duplicate-factor = 1
+        -upper-bound = 2147483647
+Tuning Parameters
+        -hyper-parameter-tuning = 0
+        -splits-location-prefix = 
+        -hyper-parameter-stats-file = 
+Optimal tree computation started!
+Leaf value: 197
+num nodes: 15 0s
+Tree with 15 nodes: 129 misclassifications; time = 1
+129
+time: 1
+Successfully terminated: 1
+new Terminal time: 0.03125
+Terminal calls: 405
+        Terminal 1node: 0
+        Terminal 2node: 0
+        Terminal 3node: 405
+Tree misclassification score has been verified!
+Cache entries: 435
+MISCLASSIFICATION SCORE: 129
+DEPTH: 4
+NUM NODES: 15
+TIME: 1 seconds
+CLOCKS FOR SOLVE: 0.046875
