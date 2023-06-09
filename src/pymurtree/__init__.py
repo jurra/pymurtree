@@ -1,2 +1,2 @@
 from pymurtree.readdata import *
-from pymurtree.optimaldecisiontreeclassifier import *
+from pymurtree.OptimalDecisionTreeClassifier import *
