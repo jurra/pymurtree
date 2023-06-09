@@ -153,11 +153,9 @@ class OptimalDecisionTreeClassifier:
                                           self.__params.duplicate_factor)
         
         # This should return a tree object that will be used for predictions
-        return self.__tree
+        return self.__tree        
 
-        
-
-    def predict(self, x: np.ndarray) -> np.ndarray:
+    def predict(self, y: np.ndarray) -> np.ndarray:
         """
         User provides a 2d array of features (no labels)
         Then we go over each row we classify 
@@ -167,7 +165,7 @@ class OptimalDecisionTreeClassifier:
         Predicts the target variable for the given input features.
         
         Args:
-            x (numpy.ndarray): A 2D array that represents the input features of the test data.
+            y (numpy.ndarray): A 2D array that represents the input features of the test data.
         
         Returns:
             numpy.ndarray: A 1D array that represents the predicted target variable of the test data.
@@ -177,16 +175,21 @@ class OptimalDecisionTreeClassifier:
         
         # We iterate the np.ndarray and classify for each row
         # We store the result in a 1d array and return it as a vector of labels
-        for row in x:
+        for row in y:
             # We need to convert the row to a list so that we can pass it to the cpp code
             row = row.tolist()
             # We call the cpp code to classify the row
-            label = self.__tree.classify(row)
+            label = self.__tree._classify(row)
             # We store the label in a 1d array
             labels = np.append(labels, label)
 
         return labels
-
+    
+    def predict_cpp(self, x: np.ndarray) -> np.ndarray:
+        # Here we do the same as above but this time the loop is in the cpp code
+        x = x.astype(np.int32)
+        predictions = self.__tree._predict(x)
+        return predictions
 
     def score(self) -> int:
         return self.__tree.misclassification_score()
