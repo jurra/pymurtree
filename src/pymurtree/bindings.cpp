@@ -4,11 +4,11 @@
 #include "solver_result.h"
 #include "feature_vector_binary.h"
 #include "file_reader.h"
+#include "exporttree.h"
 
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
-
 
 namespace py = pybind11;
 using namespace MurTree;
@@ -118,8 +118,9 @@ int random_seed, unsigned int cache_type, int duplicate_factor)
     return ph;
 }
 
- 
-PYBIND11_MODULE(lib, m) {   
+
+PYBIND11_MODULE(lib, m) {
+
     // This exposure is to test that we can properly pass the data type we need to pass to the solver
     py::class_<FeatureVectorBinary> feature_vector_binary(m, "FeatureVectorBinary");
     
@@ -238,14 +239,14 @@ PYBIND11_MODULE(lib, m) {
     
 
 
-    // Bindings for the classify method we need as part of the implmentation of predict
-    py::class_<MurTree::DecisionNode>(m, "DecisionNode")
-        .def(py::init<>())
-        // .def_static("CreateLabelNode", &MurTree::DecisionNode::CreateLabelNode)
-        // .def_static("CreateFeatureNodeWithNullChildren", &MurTree::DecisionNode::CreateFeatureNodeWithNullChildren)
-        // .def("Depth", &MurTree::DecisionNode::Depth)
-        // .def("NumNodes", &MurTree::DecisionNode::NumNodes)
-        // .def("ComputeMisclassificationScore", &MurTree::DecisionNode::ComputeMisclassificationScore)
-        .def("Classify", &MurTree::DecisionNode::Classify);
+    solver_result.def("tree_nodes", [](const SolverResult &solverresult) {
+        return solverresult.decision_tree_->NumNodes();
+    });
+
+    // Bindings for the ExportTree class
+    solver_result.def("export_text", [](const SolverResult &solverresult, std::string filepath) {
+        ExportTree::exportText(solverresult.decision_tree_, filepath);
+    });
+
 }
 
