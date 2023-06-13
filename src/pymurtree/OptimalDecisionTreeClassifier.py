@@ -9,6 +9,14 @@ def standardize_to_dtype_int32(np_array: np.ndarray) -> np.ndarray:
     '''
     By using a dtype object, we can make the method more robust 
     and ensure consistent behavior across different systems and configurations.
+
+    Args:
+        np_array (numpy.ndarray): A 2D array that represents the input features of the training data.
+            Each row corresponds to an instance, and each column corresponds to a feature.
+    
+    Returns:
+        numpy.ndarray: A 2D array that represents the input features of the training data.
+
     '''
     int32_dtype = np.dtype(np.int32)
     if np_array.dtype != int32_dtype:
@@ -189,10 +197,39 @@ class OptimalDecisionTreeClassifier:
     
 
     def score(self) -> int:
+        '''
+        Returns the misclassification score of the tree.
+
+        Args:	
+            None
+        
+        Returns:
+            int: The misclassification score of the tree.
+        '''
         return self.__tree.misclassification_score()
 
     def depth(self) -> int:
+        '''
+        Returns the depth of the tree.
+
+        Args:
+            None
+
+        Returns:
+            int: The depth of the tree.    
+
+        '''
         return self.__tree.tree_depth()
 
     def num_nodes(self) -> int:
+        '''
+        Returns the number of nodes in the tree.
+
+        Args:
+            None
+        
+        Returns:
+            int: The number of nodes in the tree.
+        '''
+
         return self.__tree.tree_nodes()
