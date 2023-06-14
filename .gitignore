@@ -1,0 +1,47 @@
+# Inspired by https://github.com/github/gitignore/blob/main/Python.gitignore
+
+# Project-specific
+murtree/
+
+# IDEs
+.vscode/
+.idea/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# python ignore
+_no_*
+**/__pycache__/
+*pymurtree_data/
+**/*.cpython*
