@@ -6,11 +6,12 @@ from pymurtree.readdata import read_from_file
 import pymurtree.lib as lib
 import pprint
 
+TRAIN_DATA = "./tests/fixtures/test_dataset.txt"
 
 @pytest.fixture
 def dl_from_file() -> np.ndarray:
     ''' Read data from DL formatted file and return as numpy array'''
-    x, y = read_from_file("_no_anneal.txt")
+    x, y = read_from_file(TRAIN_DATA)
     x = x.to_numpy()
     y = y.to_numpy()
     return np.concatenate((y.reshape(-1,1), x), axis=1).astype(np.int32)
@@ -19,7 +20,7 @@ def dl_from_file() -> np.ndarray:
 def dl_x_y() -> tuple:
     ''' Read data from DL formatted file and return as tuple with two numpy arrays 
     (x, y) where x is the feature vectors and y is the labels'''
-    x, y = read_from_file("_no_anneal.txt")
+    x, y = read_from_file(TRAIN_DATA)
     return x, y
 
 @pytest.fixture
@@ -33,7 +34,7 @@ def dl_data_sample() -> np.ndarray:
 
 # test that data read is correct
 def test_read_from_file():
-    x, y = read_from_file("_no_anneal.txt")
+    x, y = read_from_file(TRAIN_DATA)
     assert x is not None
     assert y is not None
     assert type(x) == pd.core.frame.DataFrame
@@ -63,7 +64,7 @@ def test_nparray_to_feature_vectors(dl_data_sample):
 
 def test_compare_feature_vectors(dl_from_file):
     ''' Test that we get exactly the same feature vectors from the file and from the numpy array'''
-    feature_vectors_from_file = lib._read_data_dl("_no_anneal.txt", 1)
+    feature_vectors_from_file = lib._read_data_dl(TRAIN_DATA, 1)
     assert feature_vectors_from_file is not None
     assert type(feature_vectors_from_file) == list
     assert type(feature_vectors_from_file[0]== lib.FeatureVectorBinary)
