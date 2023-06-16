@@ -10,7 +10,7 @@ import pprint
 @pytest.fixture
 def dl_from_file() -> np.ndarray:
     ''' Read data from DL formatted file and return as numpy array'''
-    x, y = read_from_file("_no_anneal.txt")
+    x, y = read_from_file("./tests/fixtures/test_dataset.txt")
     x = x.to_numpy()
     y = y.to_numpy()
     return np.concatenate((y.reshape(-1,1), x), axis=1).astype(np.int32)
