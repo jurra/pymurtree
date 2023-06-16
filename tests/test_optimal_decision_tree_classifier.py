@@ -68,16 +68,20 @@ def expected_predict_output():
 
 def test_predict(decision_tree, x_train_data, expected_predict_output):
     predict_output = decision_tree.predict(x_train_data)
+    # check that predict_output is a numpy array
+    print(predict_output)
+    print(type(predict_output))
+    assert predict_output is not None
+    assert isinstance(predict_output, np.ndarray)
     assert (predict_output == expected_predict_output).all()
-
 
 def test_predict_empty_input(decision_tree):
     # Ensure that an error or exception is raised when no input data is provided
     with pytest.raises(Exception):
-        decision_tree.predict([])
+        decision_tree._predict([])
 
 def test_predict_invalid_input(decision_tree):
     # Ensure that an error or exception is raised when invalid input data is provided
     # ...
     with pytest.raises(Exception):
-        decision_tree.predict(invalid_input)
+        decision_tree._predict(invalid_input)

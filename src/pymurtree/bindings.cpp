@@ -13,28 +13,6 @@
 namespace py = pybind11;
 using namespace MurTree;
 
-// This function is used to convert a numpy array to a vector of booleans
-std::vector<bool> NdarrayToVector(const py::array_t<bool>& arr) {
-    auto buffer = arr.request();
-    bool* ptr = (bool*) buffer.ptr;
-    std::vector<bool> boolean_vector(ptr, ptr + buffer.size);
-    return boolean_vector;
-}
-
-// This function is used to convert a numpy array to a vector of vectors
-std::vector<std::vector<int>> NumpyToVectors(py::array_t<int, py::array::c_style>& arr) {
-    auto buf = arr.request();
-    int* ptr = (int*) buf.ptr;
-    int nrows = buf.shape[0];
-    int ncols = buf.shape[1];
-
-    std::vector<std::vector<int>> vectors(nrows);
-    for (int i = 0; i < nrows; i++) {
-        vectors[i] = std::vector<int>(ptr + i * ncols, ptr + (i+1) * ncols);
-    }
-    return vectors;
-}
-
 // This function is used to convert a numpy array to a vector of vectors holding feature vector binary types
 // that were defined in the murtree library
 std::vector<std::vector<FeatureVectorBinary>> ReadDataDL(const std::vector<std::vector<int>>& vector, int duplicate_instances_factor)
@@ -128,21 +106,6 @@ PYBIND11_MODULE(lib, m) {
     m.def("_read_data_dl", &FileReader::ReadDataDL, py::arg("filename"), py::arg("duplicate_instances_factor"), 
           "Reads file and returns feature vectors");
 
-    // We use this function to construct the function that turns vectors into feature vectors which is
-    // feature vectors is a murtree defined type
-    m.def("_nparray_to_vectors", &NumpyToVectors, py::arg("np_array"), "Converts numpy array to vector of vectors");
-    // Read data coming as a numpy array that is then converted to a vector of vectors
-    // To do that we need to use the numpy_to_vectors function and then
-    // pass the result to the ReadDataDL function
-    m.def("_nparray_to_feature_vectors", [](py::array_t<int,  py::array::c_style>& arr, 
-                                            int duplicate_instances_factor) -> std::vector<std::vector<FeatureVectorBinary>> {
-        // We don't return the result as this is only needed to pass the data to the solver
-        // This function is meant to be private and will only be used to pass data to the solver like so:
-        return ReadDataDL(NumpyToVectors(arr), duplicate_instances_factor);
-    }, py::arg("np_array"), py::arg("duplicate_instances_factor"), 
-          "Reads file and returns feature vectors");
-    
-
     py::class_<ParameterHandler> parameter_handler(m, "ParameterHandler");
 
     // Expose the create parameters function to python so that we can create a parameter handler object from python
@@ -153,29 +116,17 @@ PYBIND11_MODULE(lib, m) {
             py::arg("node_selection"), py::arg("feature_ordering"), py::arg("random_seed"),
             py::arg("cache_type"), py::arg("duplicate_factor"), "Creates a parameter handler object");
 
-    
+
     // The SolverResult returns a tree with the methods we need for the predict method of the python wrapper
     py::class_<SolverResult> solver_result(m, "SolverResult");
 
-    solver_result.def("_classify", [](const SolverResult &solverresult, const py::array_t<bool>&  arr){
-        return solverresult.decision_tree_->Classify(new MurTree::FeatureVectorBinary(NdarrayToVector(arr), 0));
-    });
-
-    // This runs the classify method on each data point to get a vector of classifications
-    solver_result.def("_predict", [](const SolverResult &solverresult, py::array_t<int, py::array::c_style>& arr){
-        // Define the structure of the numpy array that we will return
-        auto buf = arr.request();
-        int* ptr = (int*) buf.ptr;
-        int nrows = buf.shape[0];
-        int ncols = buf.shape[1];
-
-        std::vector<int> predictions(nrows);
-        // Here we make the classification for all rows in the data
-        for (int i = 0; i < nrows; i++) {
-            predictions[i] = solverresult.decision_tree_->Classify(new MurTree::FeatureVectorBinary(std::vector<bool>(ptr + i * ncols, ptr + (i+1) * ncols), 0));
+    solver_result.def("_predict", [](const SolverResult &solverresult, const std::vector<std::vector<int>> arr){
+        std::vector<int> predictions;
+        for (int i = 0; i < arr.size(); i++) {
+            MurTree::FeatureVectorBinary row({std::vector<bool>(arr[i].begin(), arr[i].end())}, i);
+            predictions.push_back(solverresult.decision_tree_->Classify(&row));
         }
-        // Predictions are returned as a numpy array
-        return py::array_t<int>(nrows, predictions.data());
+        return py::array_t<int>(predictions.size(), predictions.data()); 
     });
 
     solver_result.def("misclassification_score", [](const SolverResult &solverresult) {
@@ -190,12 +141,11 @@ PYBIND11_MODULE(lib, m) {
         return solverresult.decision_tree_->NumNodes();
     });
     
-    
     // Bindings for the MurTree::Solver class
     py::class_<Solver> solver(m, "Solver");
     
     // Bindings for the MurTree::Solver constructor
-    solver.def(py::init([](py::array_t<int, py::array::c_style>& arr, // The numpy array containing the data
+    solver.def(py::init([](std::vector<std::vector<int>> arr, // The numpy array containing the data
     unsigned int time, unsigned int max_depth,
     unsigned int max_num_nodes, float sparse_coefficient, bool verbose,
     bool all_trees, bool incremental_frequency, bool similarity_lower_bound,
@@ -214,7 +164,7 @@ PYBIND11_MODULE(lib, m) {
         }
         // Construct the Solver object
         // We turn the numpy array into a vector of feature vectors before
-        return new Solver(ph, ReadDataDL(NumpyToVectors(arr), duplicate_factor));
+        return new Solver(ph, ReadDataDL(arr, duplicate_factor));
 
     }), py::keep_alive<0, 1>());
 
@@ -237,12 +187,6 @@ PYBIND11_MODULE(lib, m) {
         return solver.Solve(ph);
     });
     
-
-
-    solver_result.def("tree_nodes", [](const SolverResult &solverresult) {
-        return solverresult.decision_tree_->NumNodes();
-    });
-
     // Bindings for the ExportTree class
     solver_result.def("export_text", [](const SolverResult &solverresult, std::string filepath) {
         ExportTree::exportText(solverresult.decision_tree_, filepath);
