@@ -26,20 +26,53 @@ void ExportTree::exportText(MurTree::DecisionNode* tree, std::string filepath) {
 
 }
 
-void ExportTree::exportDOT(MurTree::DecisionNode* tree, std::string filepath) {}
+void ExportTree::exportDot(MurTree::DecisionNode* tree, std::string filepath) {
+   
+    if (tree == nullptr) {
+        return;
+    }
 
+    if (filepath.empty()) {
+        filepath = "tree.dot";
+    }
 
-ExportTree::ExportTree(MurTree::DecisionNode* tree, std::ostream* os, bool textformat)
-    : m_tree(tree), m_os(os)
-{
-    if(textformat) {
-        // print right-side first
-        writeEdge(tree, true, 0);
-        writeEdge(tree, false, 0);
+    try {
+        std::ofstream ofs(filepath, std::ofstream::out);
+        if (!ofs.is_open() || ofs.fail()) {
+            throw std::runtime_error("Failed to open output file.");
+        }
+        ExportTree tmp(tree, &ofs, false);
+        ofs.close();   
+    }
+    catch(std::runtime_error err) {
+        std::cout << "Failed to write text output file. Message: "
+              << err.what() << std::endl;
     }
 }
 
-void ExportTree::writeEdge(MurTree::DecisionNode* parentnode, bool rightedge, unsigned int indentationlevel) {
+ExportTree::ExportTree(MurTree::DecisionNode* tree, std::ostream* os, bool textformat)
+    : m_tree(tree), m_os(os), nodecount(0)
+{
+    if(textformat) {
+        // print right-side first
+        writeEdgeInTextFormat(tree, true, 0);
+        writeEdgeInTextFormat(tree, false, 0);
+    }
+    else {
+        // write file header 
+        std::string output = "digraph Tree {\n";
+        output.append("node [shape=box, style=\"filled, rounded\", color=\"black\", fontname=\"helvetica\"] ;\n");
+        output.append("edge [fontname=\"helvetica\"] ;\n");
+        m_os->write(output.data(), output.size());
+        writeNodeInDotFormat(tree, false, -1);
+        output = "}";
+        m_os->write(output.data(), output.size());
+
+    }
+}
+
+
+void ExportTree::writeEdgeInTextFormat(MurTree::DecisionNode* parentnode, bool rightedge, unsigned int indentationlevel) {
 
     // iterate over the edges of the tree
 
@@ -66,18 +99,53 @@ void ExportTree::writeEdge(MurTree::DecisionNode* parentnode, bool rightedge, un
 
     if(parentnode->IsFeatureNode()) {
         if(rightedge){
-            writeEdge(parentnode->right_child_, true, indentationlevel+1); 
+            writeEdgeInTextFormat(parentnode->right_child_, true, indentationlevel+1); 
             if(parentnode->right_child_->IsFeatureNode()){
-                writeEdge(parentnode->right_child_, false, indentationlevel+1);
+                writeEdgeInTextFormat(parentnode->right_child_, false, indentationlevel+1);
             }
         }
         else {
-            writeEdge(parentnode->left_child_, true, indentationlevel+1); 
+            writeEdgeInTextFormat(parentnode->left_child_, true, indentationlevel+1); 
             if(parentnode->left_child_->IsFeatureNode()){
-                writeEdge(parentnode->left_child_, false, indentationlevel+1);
+                writeEdgeInTextFormat(parentnode->left_child_, false, indentationlevel+1);
             }
         }   
     }
 
 }
 
+void ExportTree::writeNodeInDotFormat(MurTree::DecisionNode* node, bool rightedge, int parentid) {
+
+    if(node == nullptr) {
+        return;
+    }
+
+    std::string output = std::to_string(nodecount);
+
+    if(node->IsLabelNode()) {
+        output.append(" [label=<class: " + std::to_string(node->label_) + ">, fillcolor=\"#399de5\"] ;\n");
+    }
+    else {
+        output.append(" [label=<feature #" + std::to_string(node->feature_) + ">, fillcolor=\"#399de5\"] ;\n"); 
+    }
+
+    if (parentid >= 0) {
+        output.append(std::to_string(parentid) + " -> " + std::to_string(nodecount));
+        if(rightedge) {
+            output.append(" [headlabel=\"1\"] ;\n");
+        }
+        else {
+            output.append(" [headlabel=\"0\"] ;\n");   
+        }
+    }
+
+    m_os->write(output.data(), output.size());
+
+    int newparentid = nodecount;
+    nodecount++;
+
+    if (node->IsFeatureNode()) {
+        writeNodeInDotFormat(node->left_child_, false, newparentid);
+        writeNodeInDotFormat(node->right_child_, true, newparentid);
+    }
+}

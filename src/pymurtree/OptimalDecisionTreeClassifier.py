@@ -196,3 +196,15 @@ class OptimalDecisionTreeClassifier:
 
     def num_nodes(self) -> int:
         return self.__tree.tree_nodes()
+
+    def export_text(self, filepath: str = '') -> None:
+        if self.__tree is None:
+            raise ValueError('self.__tree is None')
+        else:
+            self.__tree.export_text(filepath)
+
+    def export_dot(self, filepath: str = '') -> None:
+        if self.__tree is None:
+            raise ValueError('self.__tree is None')
+        else:
+            self.__tree.export_dot(filepath)

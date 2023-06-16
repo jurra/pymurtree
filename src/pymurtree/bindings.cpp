@@ -248,5 +248,10 @@ PYBIND11_MODULE(lib, m) {
         ExportTree::exportText(solverresult.decision_tree_, filepath);
     });
 
+    // Bindings for the ExportTree class
+    solver_result.def("export_dot", [](const SolverResult &solverresult, std::string filepath) {
+        ExportTree::exportDot(solverresult.decision_tree_, filepath);
+    }); 
+
 }
 
