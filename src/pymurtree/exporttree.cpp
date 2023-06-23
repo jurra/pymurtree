@@ -16,7 +16,8 @@ void ExportTree::exportText(MurTree::DecisionNode* tree, std::string filepath) {
                 throw std::runtime_error("Failed to open text output file.");        
             }
 	        ExportTree tmp(tree, &ofs, true);
-	        ofs.close();	
+	        ofs.close();
+            std::cout << "Tree saved in " << filepath << std::endl;
         }
     }
     catch(std::runtime_error err) {
@@ -42,7 +43,8 @@ void ExportTree::exportDot(MurTree::DecisionNode* tree, std::string filepath) {
             throw std::runtime_error("Failed to open output file.");
         }
         ExportTree tmp(tree, &ofs, false);
-        ofs.close();   
+        ofs.close(); 
+        std::cout << "Tree saved in " << filepath << std::endl;
     }
     catch(std::runtime_error err) {
         std::cout << "Failed to write text output file. Message: "
