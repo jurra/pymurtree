@@ -61,8 +61,8 @@ ExportTree::ExportTree(MurTree::DecisionNode* tree, std::ostream* os, bool textf
     else {
         // write file header 
         std::string output = "digraph Tree {\n";
-        output.append("node [shape=box, style=\"filled, rounded\", color=\"black\", fontname=\"helvetica\"] ;\n");
-        output.append("edge [fontname=\"helvetica\"] ;\n");
+        output.append("node [shape=box, style=\"filled, rounded\", fontname=\"helvetica\", fontsize=\"8\"] ;\n");
+        output.append("edge [fontname=\"helvetica\", fontsize=\"6\"] ;\n");
         m_os->write(output.data(), output.size());
         writeNodeInDotFormat(tree, false, -1);
         output = "}";
@@ -123,19 +123,19 @@ void ExportTree::writeNodeInDotFormat(MurTree::DecisionNode* node, bool rightedg
     std::string output = std::to_string(nodecount);
 
     if(node->IsLabelNode()) {
-        output.append(" [label=<class: " + std::to_string(node->label_) + ">, fillcolor=\"#399de5\"] ;\n");
+        output.append(" [label=<class " + std::to_string(node->label_) + ">, color=\"#B77F8C\" fillcolor=\"#B77F8C\"] ;\n");
     }
     else {
-        output.append(" [label=<feature #" + std::to_string(node->feature_) + ">, fillcolor=\"#399de5\"] ;\n"); 
+        output.append(" [label=<feature #" + std::to_string(node->feature_) + ">, color=\"#8CB77F\", fillcolor=\"#8CB77F\"] ;\n"); 
     }
 
     if (parentid >= 0) {
         output.append(std::to_string(parentid) + " -> " + std::to_string(nodecount));
         if(rightedge) {
-            output.append(" [headlabel=\"1\"] ;\n");
+            output.append(" [label=\" 1 \"] ;\n");
         }
         else {
-            output.append(" [headlabel=\"0\"] ;\n");   
+            output.append(" [label=\" 0 \"] ;\n");   
         }
     }
 
