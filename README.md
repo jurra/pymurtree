@@ -1,4 +1,6 @@
 # PyMurTree 
+> DISCLAIMER: This codebase is currently in alpha version, meaning that the main branch version is made available for testing mainly by project members. Please note that this codebase is still under development and may contain bugs or errors. Users are advised to exercise caution when using this codebase and to report any issues or feedback to the developers so they can be addressed in future releases.
+
 
 PyMurTree is a Python wrapper for the [MurTree project](https://github.com/DCC/murtree). The MurTree algorithm constructs optimal classification trees that minimize the misclassification score of a given dataset while respecting constraints on depth and number of feature nodes. The sparse objective, which penalizes each node added in the tree, is also supported.
 
