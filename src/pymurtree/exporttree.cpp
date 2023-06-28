@@ -100,16 +100,20 @@ void ExportTree::writeEdgeInTextFormat(MurTree::DecisionNode* parentnode, bool r
     m_os->write(output.data(), output.size());
 
     if(parentnode->IsFeatureNode()) {
-        if(rightedge){
-            writeEdgeInTextFormat(parentnode->right_child_, true, indentationlevel+1); 
-            if(parentnode->right_child_->IsFeatureNode()){
-                writeEdgeInTextFormat(parentnode->right_child_, false, indentationlevel+1);
+        if(rightedge) {
+            if (parentnode->right_child_ != nullptr) {
+                writeEdgeInTextFormat(parentnode->right_child_, true, indentationlevel+1); 
+                if(parentnode->right_child_->IsFeatureNode()) {
+                    writeEdgeInTextFormat(parentnode->right_child_, false, indentationlevel+1);
+                }
             }
         }
         else {
-            writeEdgeInTextFormat(parentnode->left_child_, true, indentationlevel+1); 
-            if(parentnode->left_child_->IsFeatureNode()){
-                writeEdgeInTextFormat(parentnode->left_child_, false, indentationlevel+1);
+            if (parentnode->left_child_ != nullptr) {
+                writeEdgeInTextFormat(parentnode->left_child_, true, indentationlevel+1); 
+                if(parentnode->left_child_->IsFeatureNode()) {
+                    writeEdgeInTextFormat(parentnode->left_child_, false, indentationlevel+1);
+                }
             }
         }   
     }
