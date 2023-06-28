@@ -1,0 +1,7 @@
+|---feature #7 is present
+|   |---feature #3 is present
+|   |   |---class: 3
+|   |---feature #3 is missing
+|   |   |---class: 2
+|---feature #7 is missing
+|   |---class: 1
