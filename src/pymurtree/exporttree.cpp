@@ -47,7 +47,7 @@ void ExportTree::exportDot(MurTree::DecisionNode* tree, std::string filepath) {
         std::cout << "Tree saved in " << filepath << std::endl;
     }
     catch(std::runtime_error err) {
-        std::cout << "Failed to write text output file. Message: "
+        std::cout << "Failed to write dot output file. Message: "
               << err.what() << std::endl;
     }
 }
