@@ -105,6 +105,20 @@ PYBIND11_MODULE(lib, m) {
     // Expose the ReadDataDL function in the file reader for testing purposes
     m.def("_read_data_dl", &FileReader::ReadDataDL, py::arg("filename"), py::arg("duplicate_instances_factor"), 
           "Reads file and returns feature vectors");
+    
+    // Read data coming as a numpy array that is then converted to a vector of vectors
+    // To do that we need to use the numpy_to_vectors function and then
+    // pass the result to the ReadDataDL function
+    m.def("_nparray_to_feature_vectors", [](py::array_t<int, py::array::c_style>& arr, int duplicate_instances_factor) -> std::vector<std::vector<FeatureVectorBinary>> {
+        std::vector<std::vector<int>> vec;
+        // Convert the pybind11 array to a std::vector<std::vector<int>>
+        for (py::size_t i = 0; i < arr.shape(0); ++i) {
+            auto row = arr.data(i);
+            vec.emplace_back(row, row + arr.shape(1));
+        }
+        // Pass the converted vector to ReadDataDLFromVector
+        return ReadDataDL(vec, duplicate_instances_factor);
+    }, py::arg("np_array"), py::arg("duplicate_instances_factor"), "Turns numpy array data into a vector of vectors of feature vectors");
 
     py::class_<ParameterHandler> parameter_handler(m, "ParameterHandler");
 
