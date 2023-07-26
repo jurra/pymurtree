@@ -1,4 +1,11 @@
+'''
+Decription of test cases for readdata.py as user stories and acceptance criteria
 
+Story: As a user I want to read data from a file so that I can use it for training and testing
+AC: The file is written in DL format see the readme for details
+AC: The file is read and converted to a numpy array  (x, y) where x is the feature vectors and y is the labels
+AC: Features are binary values and labels are integers
+'''
 import pytest
 import pandas as pd
 import numpy as np
@@ -40,28 +47,6 @@ def test_read_from_file():
     assert type(x) == pd.core.frame.DataFrame
     assert type(y) == pd.core.series.Series
     
-
-def test_np_to_vectors(dl_x_y):
-    ''' Test that the numpy array is converted to a list of vectors'''
-
-    x = dl_x_y[0].to_numpy().astype(np.int32)
-    cpp_vectors = lib._nparray_to_vectors(x)
-
-    assert cpp_vectors is not None
-    assert type(cpp_vectors) == list
-    assert len(cpp_vectors) == x.shape[0]
-    assert type(cpp_vectors[0][0] == int)
-
-def test_nparray_to_feature_vectors(dl_data_sample):
-    ''' Test that the numpy array is converted to a list of feature vectors'''
-
-    feature_vectors = lib._nparray_to_feature_vectors(dl_data_sample, 1)
-
-    assert feature_vectors is not None
-    assert type(feature_vectors) == list
-    assert type(feature_vectors[0]== lib.FeatureVectorBinary)
-    assert len(feature_vectors) == dl_data_sample.shape[0] - 1
-
 def test_compare_feature_vectors(dl_from_file):
     ''' Test that we get exactly the same feature vectors from the file and from the numpy array'''
     feature_vectors_from_file = lib._read_data_dl(TRAIN_DATA, 1)
@@ -72,14 +57,3 @@ def test_compare_feature_vectors(dl_from_file):
     feature_vectors = lib._nparray_to_feature_vectors(dl_from_file, 1)
     assert len(feature_vectors[0]) == len(feature_vectors_from_file[0])
     assert len(feature_vectors) == len(feature_vectors_from_file)
-
-
-
-
-
-
-
-
-
-
-

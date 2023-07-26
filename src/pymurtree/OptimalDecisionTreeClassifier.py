@@ -54,7 +54,8 @@ class OptimalDecisionTreeClassifier:
     
 
     def fit(self,
-            x, y,
+            x: np.ndarray, 
+            y: np.ndarray,
             time: int = None,
             max_depth: int = None,
             max_num_nodes: int = None,
@@ -110,7 +111,7 @@ class OptimalDecisionTreeClassifier:
             x = standardize_to_dtype_int32(x) # These are required otherwise the model will not work and test will fail
             y = standardize_to_dtype_int32(y)
             if x.shape[0] == y.shape[0]:
-                    self.__params.arr = np.concatenate((y.reshape(-1,1), x), axis=1)
+                    arr = np.concatenate((y.reshape(-1,1), x), axis=1)
             else: 
                 raise ValueError('x and y have different number of rows')
             
@@ -143,7 +144,7 @@ class OptimalDecisionTreeClassifier:
 
         # Initialize solver (call cpp Solver class constructor)
         if self.__solver is None:
-            self.__solver = lib.Solver(self.__params.arr,
+            self.__solver = lib.Solver(arr,
                                        self.__params.time,
                                        self.__params.max_depth,
                                        self.__params.max_num_nodes,
@@ -159,7 +160,7 @@ class OptimalDecisionTreeClassifier:
                                        self.__params.duplicate_factor)
         
         # Creates the tree that will be used for predictions
-        self.__tree = self.__solver.solve(self.__params.arr,
+        self.__tree = self.__solver.solve(arr,
                                           self.__params.time,
                                           self.__params.max_depth,
                                           self.__params.max_num_nodes,
