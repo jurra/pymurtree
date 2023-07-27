@@ -43,5 +43,6 @@ setup(
     packages=[package_name],        # only look for a packages called <package_name>
     package_dir={"": "src"},        # look for the root package in the src directory
     ext_modules=ext_modules,
-    dev_requires=['pytest']
+    dev_requires=['pytest'],
+    install_requires=['pandas', 'numpy']
 )
