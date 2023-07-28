@@ -9,14 +9,35 @@ Details about the algorithm can be found in the paper:
 
 
 ## Installation
-Before installing PyMurTree, we recommend you to create a virtual environment and activate it. Then, install the package and its development dependencies by running:
 
+To install pymurtree on Ubuntu:
 ```bash
-python3 -m venv env
-. env/bin/activate
-pip install .[dev]
+# Install Python headers, required to build python packages with C/C++ extensions
+sudo apt-get install python3-dev
+
+# Install pip
+sudo apt install python3-pip
+
+# Get the code
+git clone https://github.com/MurTree/pymurtree.git
+cd pymurtree
+
+# Optional: build pymurtree within a virtual environment
+# python3 --version # check your python version
+# sudo apt install python<your_python_version>-venv
+# python3 -m venv env
+# . env/bin/activate
+ 
+# Install
+pip install . 
+
+# To install the dev version:
+# pip install .[dev] 
 ```
-To check what works and what doesn't, run the tests with pytest.
+
+### Building and running the tests
+
+To test your installation, run the tests using pytest.
 
 ```bash
 pytest
