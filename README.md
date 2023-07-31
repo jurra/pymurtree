@@ -10,15 +10,11 @@ Details about the algorithm can be found in the paper:
 
 ## Installation
 
-To install pymurtree on Ubuntu:
+Before attempting to install pymurtree, make sure your system has the following software available: Python version 3.7 or higher and pip.
+
+### Install from source using `pip`
+
 ```bash
-# Install Python headers, required to build python packages with C/C++ extensions
-sudo apt-get install python3-dev
-
-# Install pip
-sudo apt install python3-pip
-
-# Get the code
 git clone https://github.com/MurTree/pymurtree.git
 cd pymurtree
 
@@ -37,10 +33,19 @@ pip install .
 
 ### Building and running the tests
 
-To test your installation, run the tests using pytest.
+For building and running the tests, you will need the following software: pytest, a C++ compiler, and CMake version 3.14 or higher.
 
 ```bash
+# Run the Python tests
 pytest
+
+# Run the C++ tests
+cd tests/cpptests
+mkdir build
+cd build
+cmake ..
+make
+ctest
 ```
 
 ## Usage
