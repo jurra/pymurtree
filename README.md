@@ -33,7 +33,7 @@ pip install .
 
 ### Building and running the tests
 
-For building and running the tests, you will need the following software: pytest, a C++ compiler, and CMake version 3.14 or higher.
+For building and running the tests, you will need the following software: pytest, a C++ compiler, and CMake   version 3.14 or higher.
 
 ```bash
 # Run the Python tests
@@ -49,6 +49,8 @@ ctest
 ```
 
 ## Usage
+
+The [API documentation](https://github.com/MurTree/pymurtree/wiki/API-documentation) is available in the project Wiki.
 
 After installing pymurtree you can use it in your Python code by importing the package. Here's an example of how to build a decision tree classifier from a training dataset, make predictions and export the tree for visualization with [graphviz](https://graphviz.org/):
 
@@ -75,8 +77,4 @@ model.export_text()
 model.export_dot()
 ```
 
-
-```bash
-# Download sample datasets for the MurTree algorithm
-git clone https://github.com/MurTree/murtree-data.git
-```
+A collection of training datsets compatible with pymurtree is available in [https://github.com/MurTree/murtree-data.git](https://github.com/MurTree/murtree-data.git)
