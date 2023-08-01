@@ -49,23 +49,34 @@ ctest
 ```
 
 ## Usage
-After installing the package, you can use it in your Python code by importing pymurtree. Here's an example of how to load data, fit an optimal decision tree classifier, and predict on new data:
+
+After installing pymurtree you can use it in your Python code by importing the package. Here's an example of how to build a decision tree classifier from a training dataset, make predictions and export the tree for visualization with [graphviz](https://graphviz.org/):
 
 ```python
 import pymurtree
+import numpy
 
-(X, Y) = pymurtree.load_data("./tests/fixtures/test_dataset.txt")
-model = pymurtree.OptimalDecisionTreeClassifier(max_depth=4)
-model.fit(X, Y) 
-Y_pred = model.predict(X)
+# Create training data
+x = numpy.array([[0, 1, 0, 1], [1, 0, 0, 1], [1, 1, 0, 0]]) # features
+y = numpy.array([5, 5, 4]) # labels
+
+# Build tree classifier
+model = pymurtree.OptimalDecisionTreeClassifier()
+model.fit(x, y, max_depth=4, max_num_nodes=5, time=400)
+
+# Predict labels for a new set of features
+ft = numpy.array([[1, 0, 0, 1], [0, 0, 1, 1], [1, 0, 1, 0]])
+labels = model.predict(ft)
+
+# Visualize tree
+model.export_text()
+
+# Export tree in DOT format for visualization with graphviz
+model.export_dot()
 ```
-The fit method takes the training data X and Y as inputs, where X is the feature matrix and Y is the label vector. The predict method takes a new feature matrix as input and returns the predicted labels.
 
-You can also pass additional parameters to the fit method, such as max_num_nodes, which constrains the maximum number of nodes in the tree:
 
-```python	
-model.fit(X, Y, max_num_nodes=13)
-Y_pred2 = model.predict(X)
-
+```bash
+# Download sample datasets for the MurTree algorithm
+git clone https://github.com/MurTree/murtree-data.git
 ```
-
