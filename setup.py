@@ -28,8 +28,12 @@ ext_modules = [
         ),
         include_dirs = ["murtree/code/MurTree/Utilities/",
                         "murtree/code/MurTree/Engine/",
-                        "murtree/code/MurTree/Data Structures/"],
-        define_macros = [('VERSION_INFO', __version__)] # passing in the version to the compiled code
+                        "murtree/code/MurTree/Data Structures/",
+                        "src/pymurtree/"],        
+        define_macros = [('VERSION_INFO', __version__)], # passing in the version to the compiled code
+        # extra_objects=["murtree/code/MurTree/Data Structures/binary_data.h",
+        #                "src/pymurtree/exporttree.h"],  
+
     )
 ]
 
