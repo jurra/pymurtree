@@ -50,7 +50,28 @@ ctest
 
 ## Usage
 
-The [API documentation](https://github.com/MurTree/pymurtree/wiki/API-documentation) is available in the project Wiki.
+### API
+
+The full [API specification](https://github.com/MurTree/pymurtree/wiki/API-documentation) is available in the repo's Wiki. 
+
+pymurtree is implemented as a thin Python wrapper around the main C++ MurTree application. The main functionality of MurTree is exposed in pymurtree via the OptimalDecisionTreeClassifier class. Utility functions to load training datasets and export the tree in text and dot formats are also included in the python package.
+
+**OptimalDecisionTreeClassifier class**
+- `constructor`: initialize the parameters of the model  
+- `fit`: fit a decision tree classifier to the given training dataset
+- `predict`: predict the labels for a set of features
+- `score`: return the accuracy on the given test data and labels
+- `depth`: return the depth of the tree
+- `num_nodes`: return the number of nodes of the tree
+- `export_text`: export decision tree in text format
+- `export_dot`: export decision tree in DOT format
+
+**Utility functions**
+- `read_from_file`: read features and labels from file into a pandas dataframe
+- `load_data`: read features and labels from file into a numpy array
+
+
+### Example
 
 After installing pymurtree you can use it in your Python code by importing the package. Here's an example of how to build a decision tree classifier from a training dataset, make predictions and export the tree for visualization with [graphviz](https://graphviz.org/):
 
@@ -77,4 +98,6 @@ model.export_text()
 model.export_dot()
 ```
 
-A collection of training datsets compatible with pymurtree is available in [https://github.com/MurTree/murtree-data.git](https://github.com/MurTree/murtree-data.git)
+### Datasets
+
+A collection of datsets compatible with pymurtree is available in [https://github.com/MurTree/murtree-data](https://github.com/MurTree/murtree-data)
