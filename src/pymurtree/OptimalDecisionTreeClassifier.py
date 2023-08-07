@@ -236,12 +236,33 @@ class OptimalDecisionTreeClassifier:
         return self.__tree.tree_nodes()
 
     def export_text(self, filepath: str = '') -> None:
+        '''
+        Create a text representation of all the rules in the decision tree. 
+        Text is written to out_file if given, otherwise it is displayed on screen (standard ouput).
+
+        Args:
+            filepath (str, optional): Name of the output file.
+        
+        Returns:
+            None
+        '''
+        
         if self.__tree is None:
             raise ValueError('self.__tree is None')
         else:
             self.__tree.export_text(filepath)
 
+
     def export_dot(self, filepath: str = '') -> None:
+        '''
+        Export the decision tree in DOT format for visualization with Graphviz.
+
+        Args:
+            filepath (str, optional): Name of the output file.
+        
+        Returns:
+            None
+        '''
         if self.__tree is None:
             raise ValueError('self.__tree is None')
         else:
