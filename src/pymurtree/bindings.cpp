@@ -9,6 +9,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
+#include <pybind11/iostream.h>
 
 namespace py = pybind11;
 using namespace MurTree;
@@ -131,7 +132,9 @@ PYBIND11_MODULE(lib, m) {
             py::arg("cache_type"), py::arg("duplicate_factor"), "Creates a parameter handler object");
 
 
-    // The SolverResult returns a tree with the methods we need for the predict method of the python wrapper
+
+    // Bindings for the SolverResult class
+
     py::class_<SolverResult> solver_result(m, "SolverResult");
 
     solver_result.def("_predict", [](const SolverResult &solverresult, const std::vector<std::vector<int>> arr){
@@ -144,28 +147,34 @@ PYBIND11_MODULE(lib, m) {
     });
 
     solver_result.def("misclassification_score", [](const SolverResult &solverresult) {
+        py::scoped_ostream_redirect stream(std::cout, py::module_::import("sys").attr("stdout"));
         return solverresult.misclassifications;
     });
 
     solver_result.def("tree_depth", [](const SolverResult &solverresult) {
+        py::scoped_ostream_redirect stream(std::cout, py::module_::import("sys").attr("stdout"));
         return solverresult.decision_tree_->Depth();
     });
 
     solver_result.def("tree_nodes", [](const SolverResult &solverresult) {
+        py::scoped_ostream_redirect stream(std::cout, py::module_::import("sys").attr("stdout"));
         return solverresult.decision_tree_->NumNodes();
     });
     
+
     // Bindings for the MurTree::Solver class
+
     py::class_<Solver> solver(m, "Solver");
     
-    // Bindings for the MurTree::Solver constructor
-    solver.def(py::init([](std::vector<std::vector<int>> arr, // The numpy array containing the data
+    solver.def(py::init([](std::vector<std::vector<int>> arr,
     unsigned int time, unsigned int max_depth,
     unsigned int max_num_nodes, float sparse_coefficient, bool verbose,
     bool all_trees, bool incremental_frequency, bool similarity_lower_bound,
     unsigned int node_selection, unsigned int feature_ordering,
     int random_seed, unsigned int cache_type, int duplicate_factor) 
     {
+        py::scoped_ostream_redirect stream(std::cout, py::module_::import("sys").attr("stdout"));
+
         ParameterHandler ph = createParameters(time, max_depth, max_num_nodes,
         sparse_coefficient, verbose, all_trees, incremental_frequency,
         similarity_lower_bound, node_selection, feature_ordering, random_seed,
@@ -182,8 +191,6 @@ PYBIND11_MODULE(lib, m) {
 
     }), py::keep_alive<0, 1>());
 
-
-    // Bindings for the Solver::solve method
     solver.def("solve", [](Solver &solver, 
     py::array_t<int, py::array::c_style>& arr, unsigned int time, 
     unsigned int max_depth, unsigned int max_num_nodes, 
@@ -192,6 +199,8 @@ PYBIND11_MODULE(lib, m) {
     unsigned int node_selection, unsigned int feature_ordering,
     int random_seed, unsigned int cache_type, int duplicate_factor)
     {
+        py::scoped_ostream_redirect stream(std::cout, py::module_::import("sys").attr("stdout"));
+
         ParameterHandler ph = createParameters(time, max_depth, max_num_nodes,
         sparse_coefficient, verbose, all_trees, incremental_frequency,
         similarity_lower_bound, node_selection, feature_ordering, random_seed,
@@ -201,13 +210,16 @@ PYBIND11_MODULE(lib, m) {
         return solver.Solve(ph);
     });
     
+
     // Bindings for the ExportTree class
+
     solver_result.def("export_text", [](const SolverResult &solverresult, std::string filepath) {
+        py::scoped_ostream_redirect stream(std::cout, py::module_::import("sys").attr("stdout"));
         ExportTree::exportText(solverresult.decision_tree_, filepath);
     });
 
-    // Bindings for the ExportTree class
     solver_result.def("export_dot", [](const SolverResult &solverresult, std::string filepath) {
+        py::scoped_ostream_redirect stream(std::cout, py::module_::import("sys").attr("stdout"));
         ExportTree::exportDot(solverresult.decision_tree_, filepath);
     }); 
 
