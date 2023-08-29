@@ -9,8 +9,9 @@ on:
     branches: [ '*' ]
 
 jobs:
-  if_merged:
-    if: github.event.pull_request.merged == true
+  gen-citation:
+  # if_merged:
+  #   if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
     - name: Set up Python 3.10
