@@ -1,7 +1,12 @@
+
+
+# on:
+#   pull_request:
+#     types:
+#       - closed
 on:
-  pull_request:
-    types:
-      - closed
+  push:
+    branches: [ '*' ]
 
 jobs:
   if_merged:
@@ -9,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Set up Python 3.10
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
