@@ -10,10 +10,26 @@ target-version = "py37"
 [project]
 name = "pymurtree"
 version = "0.0.1"
+description = "Python bindings for MurTree"
+readme = "README.md"
+license = "MIT"
+keywords = ["MurTree", "Optimal decision tree", "Python bindings"]
+
+authors = [
+  {name = "Yasel Quintero", orcid = "0000-0000-0000-0001"},
+  {name = "Jose Urra", orcid = "0000-0000-0000-0002"},
+]
+
 dependencies =[
     "pandas>=1.0.0",
     "numpy>=1.18.0",
 ]
+
+[project.urls]
+homepage = "https://github.com/MurTree/pymurtree.git"
+MurTreeCpp = "https://github.com/MurTree/murtree"
+sample_data = "https://github.com/MurTree/murtree-data"
+journal = "https://doi.org/10.48550/arXiv.2007.12652"
 
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -21,9 +37,12 @@ classifiers = [
     "Operating System :: OS Independent", ]
 
 [project.optional-dependencies]
-test = [
+dev = [
     "pytest>=5.3.0",
     "pytest-cov>=2.8.0",
+]
+citation = [
+    "cff-from-621",
 ]
 
 [tool.pytest.ini_options]
@@ -31,4 +50,13 @@ pythonpath = [
   ".", "src/pymurtree",
 ]
 
-[project.urls]
+
+[tool.cff-from-621]
+order = ["message", "cff-version", "title", "abstract", "version", "date-released", "authors", "keywords"]
+
+[tool.cff-from-621.static]
+date-released = "2022-09-18"
+message = "If you use this software, please cite it as below."
+
+[tool.setuptools.dynamic]
+version = {attr = "cff_from_621.version.VERSION"}
