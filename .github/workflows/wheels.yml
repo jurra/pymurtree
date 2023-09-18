@@ -82,4 +82,5 @@ jobs:
       name: Publish to PyPI
       with:
         user: __token__
-        password: ${{ secrets.pypi_password }}
+        password: ${{ secrets.test_pypi_password }}
+        repository-url: https://test.pypi.org/legacy/
