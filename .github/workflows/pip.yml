@@ -1,3 +1,5 @@
+# This provided workflow file is focused on testing a Python project using pip, the package installer for Python. 
+# There's also a specialized job for building and testing the package in a Mingw64 environment on Windows.
 name: Pip
 
 on:
