@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: ['develop', 'main']
 
+  workflow_dispatch: 
+
+
 jobs:
   test_ubuntu:
     name: Run Tests for Ubuntu
