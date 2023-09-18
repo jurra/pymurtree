@@ -28,8 +28,12 @@ ext_modules = [
         ),
         include_dirs = ["murtree/code/MurTree/Utilities/",
                         "murtree/code/MurTree/Engine/",
-                        "murtree/code/MurTree/Data Structures/"],
-        define_macros = [('VERSION_INFO', __version__)] # passing in the version to the compiled code
+                        "murtree/code/MurTree/Data Structures/",
+                        "src/pymurtree/"],        
+        define_macros = [('VERSION_INFO', __version__)], # passing in the version to the compiled code
+        # extra_objects=["murtree/code/MurTree/Data Structures/binary_data.h",
+        #                "src/pymurtree/exporttree.h"],  
+
     )
 ]
 
@@ -43,5 +47,6 @@ setup(
     packages=[package_name],        # only look for a packages called <package_name>
     package_dir={"": "src"},        # look for the root package in the src directory
     ext_modules=ext_modules,
+    requires=["pandas", "numpy"],
     dev_requires=['pytest']
 )
