@@ -2,7 +2,7 @@
 message: If you use this software, please cite it as below.
 cff-version: 1.2.0
 title: pymurtree
-abstract: Python bindings for MurTree
+abstract: Python bindings for MurTree C++ library
 version: 0.0.1
 date-released: '2022-09-18'
 authors:

@@ -1,6 +1,10 @@
 on:
   push:
     branches: [ develop, main, test-cite-workflow ]
+  pull_request:
+    types:
+    - closed
+    branches: [ develop, main ]
 
 jobs:
   gen-citation:
