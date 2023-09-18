@@ -1,0 +1,18 @@
+---
+message: If you use this software, please cite it as below.
+cff-version: 1.2.0
+title: pymurtree
+abstract: Python bindings for MurTree
+version: 0.0.1
+date-released: '2022-09-18'
+authors:
+- name: Yasel Quintero
+- name: Jose Urra
+keywords:
+- MurTree
+- Optimal decision tree
+- Python bindings
+type: software
+license: MIT
+url: https://github.com/MurTree/pymurtree.git
+...
