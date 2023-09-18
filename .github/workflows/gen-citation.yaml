@@ -48,5 +48,3 @@ jobs:
           git commit -m "Auto commit after successful merge"
           git push
         fi
-        git commit -m "Auto commit after successful merge"
-        git push
