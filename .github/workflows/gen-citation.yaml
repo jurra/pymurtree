@@ -1,12 +1,6 @@
-
-
-# on:
-#   pull_request:
-#     types:
-#       - closed
 on:
   push:
-    branches: [ '*' ]
+    branches: [ develop, main, test-cite-workflow ]
 
 jobs:
   gen-citation:
@@ -44,10 +38,15 @@ jobs:
       env:
         PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
       run: |
-        git config --local user.email "{{ github.actor }}@users.noreply.github.com"
-        git config --local user.name "GitHub Action"
-        git add *.cff
+        # Check if there are changes to be committed
+        if [ -z "$(git status --porcelain)" ]; then
+          echo "No changes to commit"
+        else
+          git config --local user.email "{{ github.actor }}@users.noreply.github.com"
+          git config --local user.name "GitHub Action"
+          git add *.cff
+          git commit -m "Auto commit after successful merge"
+          git push
+        fi
         git commit -m "Auto commit after successful merge"
         git push
-
-      

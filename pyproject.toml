@@ -10,7 +10,7 @@ target-version = "py37"
 [project]
 name = "pymurtree"
 version = "0.0.1"
-description = "Python bindings for MurTree"
+description = "Python bindings for MurTree C++ library"
 readme = "README.md"
 license = "MIT"
 keywords = ["MurTree", "Optimal decision tree", "Python bindings"]
