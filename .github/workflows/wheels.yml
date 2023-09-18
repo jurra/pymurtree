@@ -5,12 +5,12 @@ name: Wheels
 
 on:
   workflow_dispatch:
-  pull_request:
-  push:
-    branches: [ '*'  ]
-  release:
-    types:
-      - published
+  # pull_request:
+  # push:
+  #   branches: [ '*'  ]
+  # release:
+  #   types:
+  #     - published
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
