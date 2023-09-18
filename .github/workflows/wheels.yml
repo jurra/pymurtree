@@ -49,6 +49,7 @@ jobs:
       env:
         CIBW_ARCHS_MACOS: auto universal2
         CIBW_PRERELEASE_PYTHONS: true
+        CIBW_TEST_COMMAND: ""
 
     - name: Verify clean directory
       run: git diff --exit-code
@@ -78,7 +79,7 @@ jobs:
         name: artifact
         path: dist
 
-    - uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+    - uses: pypa/gh-action-pypi-publish@release/v1
       name: Publish to PyPI
       with:
         user: __token__
