@@ -2,7 +2,7 @@
 requires = [
     "setuptools>=42",
     "pybind11>=2.10.0",
-    "gitpython>=2.1.0",
+    "gitpython>=2.1.0"
 ]
 build-backend = "setuptools.build_meta"
 
@@ -19,10 +19,10 @@ extend-select = [
   "I",   # isort
   "PGH", # pygrep-hooks
   "RUF", # Ruff-specific
-  "UP",  # pyupgrade
+  "UP"  # pyupgrade
 ]
 extend-ignore = [
-  "E501",   # Line too long
+  "E501"   # Line too long
 ]
 target-version = "py37"
 
@@ -33,17 +33,19 @@ description = "Python bindings for MurTree C++ library"
 readme = "README.md"
 long_description = {file = "README.md"}
 long_description_content_type = "text/markdown"
-license = { file = "LICENSE" }
+license = {file="LICENSE"}
 keywords = ["MurTree", "Optimal decision tree", "Python bindings"]
 
 authors = [
   {name = "Yasel Quintero", orcid = ""},
   {name = "Jose Urra", orcid = "0000-0002-9334-3998"},
+  {name = "Koos van der Linden", orcid = ""},
+  {name = "Emir Demirovic", orcid =""}
 ]
 
-dependencies =[
+dependencies = [
     "pandas>=1.0.0",
-    "numpy>=1.18.0",
+    "numpy>=1.18.0"
 ]
 
 [project.urls]
@@ -55,12 +57,16 @@ journal = "https://doi.org/10.48550/arXiv.2007.12652"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: Linux", ]
+    "Operating System :: Linux"
+]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=5.3.0",
-    "pytest-cov>=2.8.0",
+    "pytest-cov>=2.8.0"
+]
+publishing = [
+    "cff-from-621"
 ]
 publishing = [
     "cff-from-621",
@@ -68,15 +74,14 @@ publishing = [
 
 [tool.pytest.ini_options]
 pythonpath = [
-  ".", "src/pymurtree",
+  ".", "src/pymurtree"
 ]
-
 
 [tool.cff-from-621]
 order = ["message", "cff-version", "title", "abstract", "version", "date-released", "authors", "keywords"]
 
 [tool.cff-from-621.static]
-date-released = "2022-09-18"
+date-released = "2023-09-20"
 message = "If you use this software, please cite it as below."
 
 [tool.setuptools.dynamic]
