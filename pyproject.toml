@@ -33,7 +33,7 @@ description = "Python bindings for MurTree C++ library"
 readme = "README.md"
 long_description = {file = "README.md"}
 long_description_content_type = "text/markdown"
-license = "MIT"
+license = { file = "LICENSE" }
 keywords = ["MurTree", "Optimal decision tree", "Python bindings"]
 
 authors = [

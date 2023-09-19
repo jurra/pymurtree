@@ -4,8 +4,16 @@
 
 PyMurTree is a Python wrapper for the [MurTree project](https://github.com/DCC/murtree). The MurTree algorithm constructs optimal classification trees that minimize the misclassification score of a given dataset while respecting constraints on depth and number of feature nodes. The sparse objective, which penalizes each node added in the tree, is also supported.
 
-Details about the algorithm can be found in the paper:
-"MurTree: Optimal Decision Trees via Dynamic Programming and Search" by Emir Demirović, Anna Lukina, Emmanuel Hebrard, Jeffrey Chan, James Bailey, Christopher Leckie, Kotagiri Ramamohanarao, and Peter J. Stuckey, Journal of Machine Learning Research (JMLR), 2022. Available online at https://jmlr.org/papers/v23/20-520.html
+---
+## **Citation**
+
+This package is based on the methods and algorithms described in:
+> **"MurTree: Optimal Decision Trees via Dynamic Programming and Search"**  
+> by Emir Demirović, Anna Lukina, Emmanuel Hebrard, Jeffrey Chan, James Bailey, Christopher Leckie, Kotagiri Ramamohanarao, and Peter J. Stuckey  
+> Journal of Machine Learning Research (JMLR), 2022.  
+> [Available online](https://jmlr.org/papers/v23/20-520.html)
+
+---
 
 
 ## Installation
@@ -101,3 +109,22 @@ model.export_dot()
 ### Datasets
 
 A collection of datsets compatible with pymurtree is available in [https://github.com/MurTree/murtree-data](https://github.com/MurTree/murtree-data)
+
+
+## Contributing
+There are different ways in which you can contribute to pymurtree:
+- Try the package and let us know if its useful for your work. 
+- If its useful, please star the repo.
+- Report a bug or request a feature by opening an issue.
+- Contribute to the codebase by opening a pull request.
+- Currently pymurtree works only on Linux, any help picking open issues and fixing them for other platforms is welcome.
+
+## License
+
+(Add a section mentioning the license you're using and link to the LICENSE file.)
+
+## Acknowledgments
+
+(Consider thanking the original authors, any collaborators, or other third-party tools/libraries you may have used.)
+
+---
