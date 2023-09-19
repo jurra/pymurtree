@@ -68,9 +68,6 @@ dev = [
 publishing = [
     "cff-from-621"
 ]
-publishing = [
-    "cff-from-621",
-]
 
 [tool.pytest.ini_options]
 pythonpath = [

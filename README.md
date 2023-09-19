@@ -121,10 +121,4 @@ There are different ways in which you can contribute to pymurtree:
 
 ## License
 
-(Add a section mentioning the license you're using and link to the LICENSE file.)
-
-## Acknowledgments
-
-(Consider thanking the original authors, any collaborators, or other third-party tools/libraries you may have used.)
-
----
+[MIT LICENSE](LICENSE)
