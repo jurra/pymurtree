@@ -7,6 +7,8 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.cibuildwheel]
+# THIS IS NOT CURRENTLY WORKING AND IT SHOULD BE FIXED
+# TESTS SHOULD BE RUN IN ALL PLATFORMS
 # test-requires = [ "pytest"]
 # test-command = "pytest"
 test-skip = "*universal2:arm64"
@@ -29,12 +31,14 @@ name = "pymurtree"
 version = "0.0.1"
 description = "Python bindings for MurTree C++ library"
 readme = "README.md"
+long_description = {file = "README.md"}
+long_description_content_type = "text/markdown"
 license = "MIT"
 keywords = ["MurTree", "Optimal decision tree", "Python bindings"]
 
 authors = [
-  {name = "Yasel Quintero", orcid = "0000-0000-0000-0001"},
-  {name = "Jose Urra", orcid = "0000-0000-0000-0002"},
+  {name = "Yasel Quintero", orcid = ""},
+  {name = "Jose Urra", orcid = "0000-0002-9334-3998"},
 ]
 
 dependencies =[
@@ -51,7 +55,7 @@ journal = "https://doi.org/10.48550/arXiv.2007.12652"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent", ]
+    "Operating System :: Linux", ]
 
 [project.optional-dependencies]
 dev = [
