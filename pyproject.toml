@@ -28,11 +28,9 @@ target-version = "py37"
 
 [project]
 name = "pymurtree"
-version = "0.0.1"
+version = "0.0.2"
 description = "Python bindings for MurTree C++ library"
 readme = "README.md"
-long_description = {file = "README.md"}
-long_description_content_type = "text/markdown"
 keywords = ["MurTree", "Optimal decision tree", "Python bindings"]
 
 authors = [
@@ -45,7 +43,7 @@ authors = [
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: Linux"
+    "Operating System :: POSIX :: Linux",
 ]
 
 dependencies = [
