@@ -20,21 +20,19 @@ if not os.path.exists("murtree"):
 
 ext_modules = [
     Pybind11Extension(package_name + '.' + extension_name,
-        (["src/pymurtree/bindings.cpp",
-          "src/pymurtree/exporttree.cpp"]
-        + sorted(glob("murtree/code/MurTree/Utilities/*.cpp"))
-        + sorted(glob("murtree/code/MurTree/Engine/*.cpp"))
-        + sorted(glob("murtree/code/MurTree/Data Structures/*.cpp"))
-        ),
-        include_dirs = ["murtree/code/MurTree/Utilities/",
-                        "murtree/code/MurTree/Engine/",
-                        "murtree/code/MurTree/Data Structures/",
-                        "src/pymurtree/"],        
-        define_macros = [('VERSION_INFO', __version__)], # passing in the version to the compiled code
-        # extra_objects=["murtree/code/MurTree/Data Structures/binary_data.h",
-        #                "src/pymurtree/exporttree.h"],  
-
-    )
+                      (["src/pymurtree/bindings.cpp",
+                        "src/pymurtree/exporttree.cpp"]
+                       + sorted(glob("murtree/code/MurTree/Utilities/*.cpp"))
+                          + sorted(glob("murtree/code/MurTree/Engine/*.cpp"))
+                          + sorted(glob("murtree/code/MurTree/Data Structures/*.cpp"))
+                       ),
+                      include_dirs=["murtree/code/MurTree/Utilities/",
+                                    "murtree/code/MurTree/Engine/",
+                                    "murtree/code/MurTree/Data Structures/",
+                                    "src/pymurtree/"],
+                      # passing in the version to the compiled code
+                      define_macros=[('VERSION_INFO', __version__)]
+                      )
 ]
 
 setup(
@@ -44,9 +42,9 @@ setup(
     author_email="dcc@tudelft.nl",
     url="https://github.com/MurTree/pymurtree",
     description="Python wrapper for the MurTree project",
-    packages=[package_name],        # only look for a packages called <package_name>
-    package_dir={"": "src"},        # look for the root package in the src directory
+    # only look for a packages called <package_name>
+    packages=[package_name],
+    # look for the root package in the src directory
+    package_dir={"": "src"},
     ext_modules=ext_modules,
-    requires=["pandas", "numpy"],
-    dev_requires=['pytest']
 )
