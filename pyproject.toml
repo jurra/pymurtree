@@ -33,14 +33,14 @@ description = "Python bindings for MurTree C++ library"
 readme = "README.md"
 long_description = {file = "README.md"}
 long_description_content_type = "text/markdown"
-license = {file="LICENSE"}
+license = 'MIT'
 keywords = ["MurTree", "Optimal decision tree", "Python bindings"]
 
 authors = [
-  {name = "Yasel Quintero", orcid = ""},
-  {name = "Jose Urra", orcid = "0000-0002-9334-3998"},
-  {name = "Koos van der Linden", orcid = ""},
-  {name = "Emir Demirovic", orcid =""}
+  {name = "Yasel Quintero"},
+  {name = "Jose Urra"},
+  {name = "Koos van der Linden"},
+  {name = "Emir Demirovic"}
 ]
 
 dependencies = [
