@@ -1,2 +1,0 @@
-|---feature #11 is present
-|---feature #11 is missing

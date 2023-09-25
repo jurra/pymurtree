@@ -1,3 +1,0 @@
-digraph Tree {
-node [shape=box, style="filled, rounded", fontname="helvetica", fontsize="8"] ;
-edge [fontname="helvetica", fontsize="6"] ;

@@ -1,3 +1,0 @@
-- [x] Removed duplicate predict function in opmtimaldecisiontreeclassifier.py
-- [X] Changed name of the file of the optimal decision tree classifier to `OptimalDecisionTreeClassifier.py as it is a class`
-- [x] Adjusted tests accordingly 
