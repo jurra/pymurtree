@@ -67,6 +67,11 @@ dev = [
     "pytest-cov>=2.8.0"
 ]
 
+docs = [
+  "sphinx",
+  "sphinx-book-theme"  
+]
+
 [tool.pytest.ini_options]
 pythonpath = [
   ".", "src/pymurtree"
