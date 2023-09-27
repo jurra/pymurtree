@@ -70,6 +70,7 @@ dev = [
 docs = [
   "sphinx",
   'myst-parser',  
+  "sphinx_rtd_theme",
 ]
 
 [tool.pytest.ini_options]
