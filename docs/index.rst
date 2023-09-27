@@ -7,11 +7,17 @@ Welcome to PyMurTree's documentation!
 =====================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 3
+   :caption: PyMurTree
+   
+   readme.md
+   
 
+.. toctree::
+   :maxdepth: 3
+   :caption: For developers
+   
    api_reference
-
 
 
 Indices and tables
