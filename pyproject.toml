@@ -69,7 +69,7 @@ dev = [
 
 docs = [
   "sphinx",
-  "sphinx-book-theme"  
+  'myst-parser',  
 ]
 
 [tool.pytest.ini_options]

@@ -8,11 +8,11 @@
 
 import os
 import sys
+import shutil
 
 sys.path.insert(0, os.path.abspath('../src/pymurtree'))
-# Check path
-# print("Path:")
-# print(sys.path)
+
+shutil.copyfile('../README.md', './readme.md')
 
 project = 'PyMurTree'
 copyright = '2023, Yasel Quintero, Jose Urra, Emir Demirovic, Koos van der Linden'
@@ -25,8 +25,13 @@ release = '0.0.1'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
-    'sphinx.ext.coverage'
+    'sphinx.ext.coverage',
+    'sphinx.ext.githubpages',
+    'myst_parser',
+    'sphinx_rtd_theme'
 ]
+
+source_suffix = ['.rst', '.md']
 
 # Specify autodoc settings
 napoleon_numpy_docstring = True
@@ -42,5 +47,5 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinx_book_theme'
+html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
