@@ -49,3 +49,4 @@ _no_*
 **/__pycache__/
 *pymurtree_data/
 **/*.cpython*
+*.pyd
