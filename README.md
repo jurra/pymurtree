@@ -2,7 +2,7 @@
 
 [![GitHub](https://img.shields.io/github/license/MurTree/pymurtree?)](https://github.com/MurTree/pymurtree/blob/master/LICENSE)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/MurTree/pymurtree/wheels.yml)
-[![codecov](https://codecov.io/gh/MurTree/pymurtree/branch/master/graph/badge.svg?token=2868b644)](https://codecov.io/gh/MurTree/pymurtree)
+[![codecov](https://codecov.io/gh/MurTree/pymurtree/branch/develop/graph/badge.svg?token=2TKHE7IN49)](https://codecov.io/gh/MurTree/pymurtree)
 ![GitHub repo size](https://img.shields.io/github/repo-size/MurTree/pymurtree)
 
 Warning:
