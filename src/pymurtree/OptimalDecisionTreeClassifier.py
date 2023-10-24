@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-
 from . import lib
 from pymurtree.parameters import Parameters
 
@@ -34,10 +33,10 @@ class OptimalDecisionTreeClassifier:
     def __init__(self,
                  time: int = 600,
                  max_depth: int = 3,
-                 max_num_nodes: int = 7,
+                 max_num_nodes: int = None,
                  sparse_coefficient: float = 0.0,
-                 verbose: bool = True,
-                 all_trees: bool = True,
+                 verbose: bool = False,
+                 all_trees: bool = False,
                  incremental_frequency: bool = True,
                  similarity_lower_bound: bool = True,
                  node_selection: int = 0,
@@ -49,6 +48,10 @@ class OptimalDecisionTreeClassifier:
 
         self.__solver = None
         self.__tree = None
+
+        if max_num_nodes is None:
+            max_num_nodes = 2**max_depth - 1
+        max_num_nodes = min(2**max_depth - 1, max_num_nodes)
 
         self.__params = Parameters(time, max_depth, max_num_nodes,
                                    sparse_coefficient, verbose,
