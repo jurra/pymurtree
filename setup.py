@@ -8,7 +8,7 @@ from glob import glob
 # Define package metadata
 package_name = 'pymurtree'
 extension_name = 'lib'
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 # Clone the Murtree repository and checkout last commit before DCC changes
 if not os.path.exists("murtree"):
@@ -31,7 +31,9 @@ ext_modules = [
                                     "murtree/code/MurTree/Data Structures/",
                                     "src/pymurtree/"],
                       # passing in the version to the compiled code
-                      define_macros=[('VERSION_INFO', __version__)]
+                      define_macros=[('VERSION_INFO', __version__)],
+                      language='c++',
+                      cxx_std=11
                       )
 ]
 

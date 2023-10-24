@@ -28,7 +28,7 @@ target-version = "py37"
 
 [project]
 name = "pymurtree"
-version = "0.0.1"
+version = "0.0.2"
 description = "Python bindings for MurTree C++ library"
 readme = "README.md"
 keywords = ["MurTree", "Optimal decision tree", "Python bindings"]
@@ -65,6 +65,12 @@ journal = "https://doi.org/10.48550/arXiv.2007.12652"
 dev = [
     "pytest>=5.3.0",
     "pytest-cov>=2.8.0"
+]
+
+docs = [
+  "sphinx",
+  'myst-parser',  
+  "sphinx_rtd_theme",
 ]
 
 [tool.pytest.ini_options]
